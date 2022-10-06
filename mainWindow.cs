@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
-using poligonEditor.components;
 using static System.Windows.Forms.LinkLabel;
 
 namespace poligonEditor
@@ -18,7 +17,11 @@ namespace poligonEditor
         // Actual object we are going draw on, like a "canvas"
         private Bitmap drawArea;
 
-        List<point> points = new List<point>();
+        List<components.Point> points = new List<components.Point>();
+
+        List<components.Line> lines = new List<components.Line>();
+
+        components.Line tmpLine = null;
 
         public mainWindow()
         {
@@ -34,7 +37,7 @@ namespace poligonEditor
         // When we resize our window we need to adapt our bitmap size
         private void mainWindow_Resize(object sender, EventArgs e)
         {
-            if (drawArea != null) drawArea.Dispose();
+            if (!(drawArea is null)) drawArea.Dispose();
             drawArea = new Bitmap(mainPictureBox.Size.Width, mainPictureBox.Size.Height);
             mainPictureBox.Image = drawArea;
             drawOnPictureBox();
@@ -48,9 +51,9 @@ namespace poligonEditor
             {
                 g.Clear(Color.White);
             }
-            foreach (point p in points)
+            foreach (components.Line l in lines)
             {
-                p.Draw(drawArea);
+                l.Draw(drawArea);
             }
             mainPictureBox.Refresh();
         }
@@ -60,11 +63,18 @@ namespace poligonEditor
             // Deside which button was pressed
             switch (e.Button) { 
                 case MouseButtons.Left:
-                    // We schould add a point to the list
-                    point p = new point(e.X, e.Y);
-                    points.Add(p);
-                    p.Draw(drawArea);
-                    mainPictureBox.Refresh();
+                    if(tmpLine is null)
+                    {
+                        tmpLine = new components.Line(new poligonEditor.components.Point(e.X, e.Y));
+                    }
+                    else
+                    {
+                        tmpLine.SetSecondPoint(new poligonEditor.components.Point(e.X, e.Y));
+                        lines.Add(tmpLine);
+                        tmpLine.Draw(drawArea);
+                        mainPictureBox.Refresh();
+                        tmpLine = null;
+                    }
                     break;
                 case MouseButtons.Right:
                     break;

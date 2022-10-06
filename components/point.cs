@@ -7,42 +7,35 @@ using System.Threading.Tasks;
 
 namespace poligonEditor.components
 {
-    internal class point : IDisposable
+    internal class Point : IDisposable
     {
         // Implementing Global Unique ID might be helpful in the future
         public Guid InstanceID { get; private set; }
 
         // Basic point information
-        private int _x;
-        private int _y;
-        public int x
-        {
-            get => _x;
-        }
-        public int y
-        {
-            get => _y;
-        }
+        public int x { get; private set; }
+        public int y { get; private set; }
 
-        public point(int x, int y)
+        public Point(int x, int y)
         {
             this.InstanceID = Guid.NewGuid();
-            _x = x;
-            _y = y;
+            this.x = x;
+            this.y = y;
         }
         // Function to draw point on a bitmap
         public void Draw(Bitmap drawArea)
         {
             using (Graphics g = Graphics.FromImage(drawArea))
             {
-                g.FillRectangle((Brush)Brushes.Black, _x, _y, 1, 1);
-
+                g.FillRectangle((Brush)Brushes.Black, x, y, 1, 1);
             }
         }
 
+        public static explicit operator System.Drawing.Point(components.Point p) => new System.Drawing.Point(p.x, p.y);
+
         public void Dispose()
         {
-            
+            throw new NotImplementedException();
         }
     }
 }
