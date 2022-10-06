@@ -58,6 +58,7 @@
             this.mainPictureBox.Size = new System.Drawing.Size(614, 450);
             this.mainPictureBox.TabIndex = 0;
             this.mainPictureBox.TabStop = false;
+            this.mainPictureBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.clickOnPictureBox);
             // 
             // mainWindow
             // 
@@ -67,6 +68,7 @@
             this.Controls.Add(this.splitContainer1);
             this.Name = "mainWindow";
             this.Text = "poligonEditor";
+            this.Resize += new System.EventHandler(this.mainWindow_Resize);
             this.splitContainer1.Panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
