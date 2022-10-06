@@ -7,6 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
+using poligonEditor.components;
+using static System.Windows.Forms.LinkLabel;
 
 namespace poligonEditor
 {
@@ -14,6 +17,9 @@ namespace poligonEditor
     {
         // Actual object we are going draw on, like a "canvas"
         private Bitmap drawArea;
+
+        List<point> points = new List<point>();
+
         public mainWindow()
         {
             InitializeComponent();
@@ -42,11 +48,31 @@ namespace poligonEditor
             {
                 g.Clear(Color.White);
             }
+            foreach (point p in points)
+            {
+                p.Draw(drawArea);
+            }
+            mainPictureBox.Refresh();
         }
 
         private void clickOnPictureBox(object sender, MouseEventArgs e)
         {
-
+            // Deside which button was pressed
+            switch (e.Button) { 
+                case MouseButtons.Left:
+                    // We schould add a point to the list
+                    point p = new point(e.X, e.Y);
+                    points.Add(p);
+                    p.Draw(drawArea);
+                    mainPictureBox.Refresh();
+                    break;
+                case MouseButtons.Right:
+                    break;
+                case MouseButtons.Middle:
+                    break;
+                default:
+                    throw new ArgumentException("Event argument contained invalid Button propperty");
+            }
         }
     }
 }
