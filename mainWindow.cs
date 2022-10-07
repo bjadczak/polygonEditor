@@ -17,10 +17,7 @@ namespace poligonEditor
         // Actual object we are going draw on, like a "canvas"
         private Bitmap drawArea;
 
-        List<components.Point> points = new List<components.Point>();
-
-        List<components.Line> lines = new List<components.Line>();
-
+        // List of poligons we have on the screen
         List<components.Poligon> poli = new List<components.Poligon>();
 
         components.Poligon tmpPoli = null;
@@ -92,6 +89,17 @@ namespace poligonEditor
                 default:
                     throw new ArgumentException("Event argument contained invalid Button propperty");
             }
+        }
+
+        private void mouseMoveOverCanvas(object sender, MouseEventArgs e)
+        {
+            if (tmpPoli is null) return;
+
+            drawOnPictureBox();
+
+            tmpPoli.DrawIncompleteLine(drawArea, e.X, e.Y);
+
+            mainPictureBox.Refresh();
         }
     }
 }

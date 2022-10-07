@@ -13,10 +13,10 @@ namespace poligonEditor.components
         public Guid InstanceID { get; private set; }
 
         // Basic point information
-        public int x { get; private set; }
-        public int y { get; private set; }
+        public double x { get; private set; }
+        public double y { get; private set; }
 
-        public Point(int x, int y)
+        public Point(double x, double y)
         {
             this.InstanceID = Guid.NewGuid();
             this.x = x;
@@ -27,25 +27,35 @@ namespace poligonEditor.components
         {
             using (Graphics g = Graphics.FromImage(drawArea))
             {
-                g.FillRectangle((Brush)Brushes.Black, x, y, 1, 1);
+                // If we want to draw 1 pixel we use
+                // g.FillRectangle((Brush)Brushes.Black, x, y, 1, 1);
+
+                drawCircle(g, (float)x, (float)y);
             }
         }
 
-        public static explicit operator System.Drawing.Point(components.Point p) => new System.Drawing.Point(p.x, p.y);
+        public static explicit operator System.Drawing.Point(components.Point p) => new System.Drawing.Point((int)p.x, (int)p.y);
 
         public void Dispose()
         {
             throw new NotImplementedException();
         }
 
-        public static int getDistance(components.Point firstPoint, components.Point secondPoint)
+        public static double getDistance(components.Point firstPoint, components.Point secondPoint)
         {
             return (firstPoint.x - secondPoint.x) * (firstPoint.x - secondPoint.x) + (firstPoint.y - secondPoint.y) * (firstPoint.y - secondPoint.y);
         }
 
-        public int getDistance(components.Point secondPoint)
+        public double getDistance(components.Point secondPoint)
         {
             return components.Point.getDistance(this, secondPoint);
+        }
+
+        private void drawCircle(Graphics g, float x, float y)
+        {
+            const int pointSize = 8;
+            
+            g.FillEllipse((Brush)Brushes.DarkCyan, x - pointSize/2, y - pointSize/2, pointSize, pointSize);
         }
     }
 }

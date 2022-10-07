@@ -17,8 +17,12 @@ namespace poligonEditor.components
         public components.Point startingPoint { get; private set; }
         private components.Point finishingPoint;
 
-        private const int precisionOfFinishing = 10;
+        private const int precisionOfFinishing = 16;
 
+        // Create pen for temporary line.
+        Pen grayPen = new Pen(Color.Gray, 3);
+
+        // Constructor for empty poligon and one with only one point (startingPoint)
         public Poligon()
         {
             lines = new List<components.Line>();
@@ -35,6 +39,7 @@ namespace poligonEditor.components
 
         public bool isPoligonComplet() => !(startingPoint is null) && !(finishingPoint is null) && lines.Count > 0 && startingPoint.InstanceID == finishingPoint.InstanceID;
 
+        // We build our poligon by those two methods, adding points on the way
         public void addFirstPoint(components.Point pt)
         {
             if (isPoligonComplet()) throw new InvalidOperationException("Poligon already complet");
@@ -68,6 +73,14 @@ namespace poligonEditor.components
         public void Dispose()
         {
             throw new NotImplementedException();
+        }
+
+        public void DrawIncompleteLine(Bitmap drawArea, int x, int y)
+        {
+            using (Graphics g = Graphics.FromImage(drawArea))
+            {
+                g.DrawLine(grayPen, (System.Drawing.Point)finishingPoint, new System.Drawing.Point(x, y));
+            }
         }
     }
 }

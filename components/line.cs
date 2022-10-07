@@ -56,10 +56,13 @@ namespace poligonEditor.components
 
         public void Draw(Bitmap drawArea)
         {
+            if (Pt1 is null || Pt2 is null) throw new InvalidOperationException("Cannot draw lines without both points");
             using (Graphics g = Graphics.FromImage(drawArea))
             {
                 g.DrawLine(blackPen, (System.Drawing.Point)Pt1, (System.Drawing.Point)Pt2);
             }
+            Pt1.Draw(drawArea);
+            Pt2.Draw(drawArea);
         }
 
         public void Dispose()
