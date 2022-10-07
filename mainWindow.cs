@@ -31,7 +31,6 @@ namespace poligonEditor
         // Point of poligon we are moving
         components.Point holdingPoint = null;
 
-        //
 
         public mainWindow()
         {
