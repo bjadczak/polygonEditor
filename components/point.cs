@@ -57,5 +57,16 @@ namespace poligonEditor.components
             
             g.FillEllipse((Brush)Brushes.DarkCyan, x - pointSize/2, y - pointSize/2, pointSize, pointSize);
         }
+
+        public void movePoint(double x, double y)
+        {
+            this.x = x;
+            this.y = y;
+        }
+        public void movePoint(components.Point p)
+        {
+            this.x = p.x;
+            this.y = p.y;
+        }
     }
 }

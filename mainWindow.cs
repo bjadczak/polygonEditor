@@ -20,10 +20,18 @@ namespace poligonEditor
         // List of poligons we have on the screen
         List<components.Poligon> poli = new List<components.Poligon>();
 
+        // Listo of references to all points(verteces)
+        List<components.Point> allPoints = new List<components.Point>();
+
         components.Poligon tmpPoli = null;
 
         // Moste recent point where we saw mouse
         components.Point movingPoint = null;
+
+        // Point of poligon we are moving
+        components.Point holdingPoint = null;
+
+        //
 
         public mainWindow()
         {
@@ -75,14 +83,20 @@ namespace poligonEditor
             // Deside which button was pressed
             switch (e.Button) { 
                 case MouseButtons.Left:
+                    // TODO: Add stopping of creation of new poligon
                     if(tmpPoli is null)
                     {
-                        tmpPoli = new components.Poligon(new components.Point(e.X, e.Y));
+                        components.Point tmpPoint = new components.Point(e.X, e.Y);
+                        tmpPoli = new components.Poligon(tmpPoint);
+                        allPoints.Add(tmpPoint);
                     }
                     else
                     {
                         movingPoint = null;
-                        tmpPoli.addNewPoint(new components.Point(e.X, e.Y));
+                        components.Point tmpPoint = new components.Point(e.X, e.Y);
+                        tmpPoli.addNewPoint(tmpPoint);
+                        allPoints.Add(tmpPoint);
+
                         tmpPoli.Draw(drawArea);
                         mainPictureBox.Refresh();
                         if (tmpPoli.isPoligonComplet())
@@ -93,6 +107,19 @@ namespace poligonEditor
                     }
                     break;
                 case MouseButtons.Right:
+                    if (allPoints.Count <= 0 || !(tmpPoli is null)) break;
+                    components.Point actPoint = new components.Point(e.X, e.Y);
+                    components.Point closest = allPoints[0];
+
+                    foreach (components.Point p in allPoints)
+                    {
+                        if (actPoint.getDistance(p) < actPoint.getDistance(closest)) closest = p;
+                    }
+
+                    holdingPoint = closest;
+
+                    drawOnPictureBox();
+
                     break;
                 case MouseButtons.Middle:
                     break;
@@ -105,13 +132,20 @@ namespace poligonEditor
         // they click
         private void mouseMoveOverCanvas(object sender, MouseEventArgs e)
         {
-            if (tmpPoli is null) return;
+            //if (tmpPoli is null) return;
 
             movingPoint = new components.Point(e.X, e.Y);
+
+            if (!(holdingPoint is null)) holdingPoint.movePoint(movingPoint);
 
             drawOnPictureBox();
 
             mainPictureBox.Refresh();
+        }
+
+        private void endOfClickOnPictureBox(object sender, MouseEventArgs e)
+        {
+            holdingPoint = null;
         }
     }
 }
