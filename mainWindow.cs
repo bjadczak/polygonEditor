@@ -21,7 +21,9 @@ namespace poligonEditor
 
         List<components.Line> lines = new List<components.Line>();
 
-        components.Line tmpLine = null;
+        List<components.Poligon> poli = new List<components.Poligon>();
+
+        components.Poligon tmpPoli = null;
 
         public mainWindow()
         {
@@ -51,10 +53,14 @@ namespace poligonEditor
             {
                 g.Clear(Color.White);
             }
-            foreach (components.Line l in lines)
+
+            if (!(tmpPoli is null)) tmpPoli.Draw(drawArea);
+
+            foreach(components.Poligon p in poli)
             {
-                l.Draw(drawArea);
+                p.Draw(drawArea);
             }
+            
             mainPictureBox.Refresh();
         }
 
@@ -63,17 +69,20 @@ namespace poligonEditor
             // Deside which button was pressed
             switch (e.Button) { 
                 case MouseButtons.Left:
-                    if(tmpLine is null)
+                    if(tmpPoli is null)
                     {
-                        tmpLine = new components.Line(new poligonEditor.components.Point(e.X, e.Y));
+                        tmpPoli = new components.Poligon(new components.Point(e.X, e.Y));
                     }
                     else
                     {
-                        tmpLine.SetSecondPoint(new poligonEditor.components.Point(e.X, e.Y));
-                        lines.Add(tmpLine);
-                        tmpLine.Draw(drawArea);
+                        tmpPoli.addNewPoint(new components.Point(e.X, e.Y));
+                        tmpPoli.Draw(drawArea);
                         mainPictureBox.Refresh();
-                        tmpLine = null;
+                        if (tmpPoli.isPoligonComplet())
+                        {
+                            poli.Add(tmpPoli);
+                            tmpPoli = null;
+                        }
                     }
                     break;
                 case MouseButtons.Right:

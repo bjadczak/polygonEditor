@@ -37,5 +37,15 @@ namespace poligonEditor.components
         {
             throw new NotImplementedException();
         }
+
+        public static int getDistance(components.Point firstPoint, components.Point secondPoint)
+        {
+            return (firstPoint.x - secondPoint.x) * (firstPoint.x - secondPoint.x) + (firstPoint.y - secondPoint.y) * (firstPoint.y - secondPoint.y);
+        }
+
+        public int getDistance(components.Point secondPoint)
+        {
+            return components.Point.getDistance(this, secondPoint);
+        }
     }
 }
