@@ -22,6 +22,9 @@ namespace poligonEditor
 
         components.Poligon tmpPoli = null;
 
+        // Moste recent point where we saw mouse
+        components.Point movingPoint = null;
+
         public mainWindow()
         {
             InitializeComponent();
@@ -51,9 +54,15 @@ namespace poligonEditor
                 g.Clear(Color.White);
             }
 
-            if (!(tmpPoli is null)) tmpPoli.Draw(drawArea);
+            // Drawing poligon that is being build
+            if (!(tmpPoli is null))
+            {
+                tmpPoli.Draw(drawArea);
+                tmpPoli.DrawIncompleteLine(drawArea, movingPoint);
+            }
 
-            foreach(components.Poligon p in poli)
+            // Draw all poligons taht we have stored
+            foreach (components.Poligon p in poli)
             {
                 p.Draw(drawArea);
             }
@@ -72,6 +81,7 @@ namespace poligonEditor
                     }
                     else
                     {
+                        movingPoint = null;
                         tmpPoli.addNewPoint(new components.Point(e.X, e.Y));
                         tmpPoli.Draw(drawArea);
                         mainPictureBox.Refresh();
@@ -91,13 +101,15 @@ namespace poligonEditor
             }
         }
 
+        // We draw a gray line to show user that new line is going to appear when
+        // they click
         private void mouseMoveOverCanvas(object sender, MouseEventArgs e)
         {
             if (tmpPoli is null) return;
 
-            drawOnPictureBox();
+            movingPoint = new components.Point(e.X, e.Y);
 
-            tmpPoli.DrawIncompleteLine(drawArea, e.X, e.Y);
+            drawOnPictureBox();
 
             mainPictureBox.Refresh();
         }

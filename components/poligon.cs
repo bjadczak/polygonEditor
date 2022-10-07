@@ -75,11 +75,11 @@ namespace poligonEditor.components
             throw new NotImplementedException();
         }
 
-        public void DrawIncompleteLine(Bitmap drawArea, int x, int y)
+        public void DrawIncompleteLine(Bitmap drawArea, components.Point pt)
         {
             using (Graphics g = Graphics.FromImage(drawArea))
             {
-                g.DrawLine(grayPen, (System.Drawing.Point)finishingPoint, new System.Drawing.Point(x, y));
+                g.DrawLine(grayPen, (System.Drawing.Point)finishingPoint, (System.Drawing.Point)pt);
             }
         }
     }
