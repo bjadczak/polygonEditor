@@ -31,6 +31,9 @@ namespace poligonEditor
         // Point of poligon we are moving
         components.Point holdingPoint = null;
 
+        // Active mode of input
+        misc.enums.mode activeMode = misc.enums.mode.addingPoint;
+
 
         public mainWindow()
         {
@@ -82,42 +85,60 @@ namespace poligonEditor
             // Deside which button was pressed
             switch (e.Button) { 
                 case MouseButtons.Left:
-                    // TODO: Add stopping of creation of new poligon
-                    if(tmpPoli is null)
+                    // Chceck what mode is active
+                    switch (activeMode)
                     {
-                        components.Point tmpPoint = new components.Point(e.X, e.Y);
-                        tmpPoli = new components.Poligon(tmpPoint);
-                        allPoints.Add(tmpPoint);
-                    }
-                    else
-                    {
-                        movingPoint = null;
-                        components.Point tmpPoint = new components.Point(e.X, e.Y);
-                        tmpPoli.addNewPoint(tmpPoint);
-                        allPoints.Add(tmpPoint);
+                        case misc.enums.mode.addingPoint:
+                            {
+                                // TODO: Add stopping of creation of new poligon
+                                if (tmpPoli is null)
+                                {
+                                    components.Point tmpPoint = new components.Point(e.X, e.Y);
+                                    tmpPoli = new components.Poligon(tmpPoint);
+                                    allPoints.Add(tmpPoint);
+                                }
+                                else
+                                {
+                                    movingPoint = null;
+                                    components.Point tmpPoint = new components.Point(e.X, e.Y);
+                                    tmpPoli.addNewPoint(tmpPoint);
+                                    allPoints.Add(tmpPoint);
 
-                        tmpPoli.Draw(drawArea);
-                        mainPictureBox.Refresh();
-                        if (tmpPoli.isPoligonComplet())
-                        {
-                            poli.Add(tmpPoli);
-                            tmpPoli = null;
-                        }
+                                    tmpPoli.Draw(drawArea);
+                                    mainPictureBox.Refresh();
+                                    if (tmpPoli.isPoligonComplet())
+                                    {
+                                        poli.Add(tmpPoli);
+                                        tmpPoli = null;
+                                    }
+                                }
+                            }
+                            break;
+                        case misc.enums.mode.movingPoint:
+                            {
+                                if (allPoints.Count <= 0 || !(tmpPoli is null)) break;
+                                components.Point actPoint = new components.Point(e.X, e.Y);
+                                components.Point closest = allPoints[0];
+
+                                foreach (components.Point p in allPoints)
+                                {
+                                    if (actPoint.getDistance(p) < actPoint.getDistance(closest)) closest = p;
+                                }
+
+                                holdingPoint = closest;
+
+                                drawOnPictureBox();
+                            }
+                            break;
+                        case misc.enums.mode.movingEdge:
+                        default:
+                            break;
                     }
+                    
                     break;
                 case MouseButtons.Right:
-                    if (allPoints.Count <= 0 || !(tmpPoli is null)) break;
-                    components.Point actPoint = new components.Point(e.X, e.Y);
-                    components.Point closest = allPoints[0];
-
-                    foreach (components.Point p in allPoints)
-                    {
-                        if (actPoint.getDistance(p) < actPoint.getDistance(closest)) closest = p;
-                    }
-
-                    holdingPoint = closest;
-
-                    drawOnPictureBox();
+                    // We open context menu
+                    contextMenuStrip.Show(this, new Point(e.X, e.Y));
 
                     break;
                 case MouseButtons.Middle:
@@ -131,7 +152,7 @@ namespace poligonEditor
         // they click
         private void mouseMoveOverCanvas(object sender, MouseEventArgs e)
         {
-            //if (tmpPoli is null) return;
+            if (tmpPoli is null && holdingPoint is null) return;
 
             movingPoint = new components.Point(e.X, e.Y);
 
@@ -145,6 +166,35 @@ namespace poligonEditor
         private void endOfClickOnPictureBox(object sender, MouseEventArgs e)
         {
             holdingPoint = null;
+        }
+
+        private void resetContextMenu()
+        {
+            foreach(ToolStripMenuItem menuItem in contextMenuStrip.Items)
+            {
+                menuItem.Checked = false;
+            }
+        }
+
+        private void addAPointMenuItem_Click(object sender, EventArgs e)
+        {
+            resetContextMenu();
+            addAPointMenuItem.Checked = true;
+            activeMode = misc.enums.mode.addingPoint;
+        }
+
+        private void movaAPointMenuItem_Click(object sender, EventArgs e)
+        {
+            resetContextMenu();
+            movaAPointMenuItem.Checked = true;
+            activeMode = misc.enums.mode.movingPoint;
+        }
+
+        private void moveAnEdgeMenuItem_Click(object sender, EventArgs e)
+        {
+            resetContextMenu();
+            moveAnEdgeMenuItem.Checked = true;
+            activeMode = misc.enums.mode.movingEdge;
         }
     }
 }

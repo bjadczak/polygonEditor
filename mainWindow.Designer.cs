@@ -28,119 +28,82 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.components = new System.ComponentModel.Container();
             this.mainPictureBox = new System.Windows.Forms.PictureBox();
-            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
+            this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.addAPointMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.movaAPointMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.moveAnEdgeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.mainPictureBox)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
-            this.splitContainer2.Panel1.SuspendLayout();
-            this.splitContainer2.Panel2.SuspendLayout();
-            this.splitContainer2.SuspendLayout();
+            this.contextMenuStrip.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // splitContainer1
-            // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.IsSplitterFixed = true;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Name = "splitContainer1";
-            // 
-            // splitContainer1.Panel1
-            // 
-            this.splitContainer1.Panel1.Controls.Add(this.mainPictureBox);
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-            this.splitContainer1.Size = new System.Drawing.Size(800, 450);
-            this.splitContainer1.SplitterDistance = 623;
-            this.splitContainer1.TabIndex = 0;
             // 
             // mainPictureBox
             // 
             this.mainPictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mainPictureBox.Location = new System.Drawing.Point(0, 0);
             this.mainPictureBox.Name = "mainPictureBox";
-            this.mainPictureBox.Size = new System.Drawing.Size(623, 450);
-            this.mainPictureBox.TabIndex = 2;
+            this.mainPictureBox.Size = new System.Drawing.Size(800, 450);
+            this.mainPictureBox.TabIndex = 3;
             this.mainPictureBox.TabStop = false;
             this.mainPictureBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.clickOnPictureBox);
             this.mainPictureBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mouseMoveOverCanvas);
             this.mainPictureBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.endOfClickOnPictureBox);
             // 
-            // splitContainer2
+            // contextMenuStrip
             // 
-            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer2.Name = "splitContainer2";
-            this.splitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            this.contextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addAPointMenuItem,
+            this.movaAPointMenuItem,
+            this.moveAnEdgeMenuItem});
+            this.contextMenuStrip.Name = "contextMenuStrip";
+            this.contextMenuStrip.Size = new System.Drawing.Size(181, 92);
             // 
-            // splitContainer2.Panel1
+            // addAPointMenuItem
             // 
-            this.splitContainer2.Panel1.Controls.Add(this.groupBox1);
+            this.addAPointMenuItem.Checked = true;
+            this.addAPointMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.addAPointMenuItem.Name = "addAPointMenuItem";
+            this.addAPointMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.addAPointMenuItem.Text = "Add a point";
+            this.addAPointMenuItem.Click += new System.EventHandler(this.addAPointMenuItem_Click);
             // 
-            // splitContainer2.Panel2
+            // movaAPointMenuItem
             // 
-            this.splitContainer2.Panel2.Controls.Add(this.groupBox2);
-            this.splitContainer2.Size = new System.Drawing.Size(173, 450);
-            this.splitContainer2.SplitterDistance = 340;
-            this.splitContainer2.TabIndex = 0;
+            this.movaAPointMenuItem.Name = "movaAPointMenuItem";
+            this.movaAPointMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.movaAPointMenuItem.Text = "Move a point";
+            this.movaAPointMenuItem.Click += new System.EventHandler(this.movaAPointMenuItem_Click);
             // 
-            // groupBox1
+            // moveAnEdgeMenuItem
             // 
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox1.Location = new System.Drawing.Point(0, 0);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(173, 340);
-            this.groupBox1.TabIndex = 0;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "groupBox1";
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox2.Location = new System.Drawing.Point(0, 0);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(173, 106);
-            this.groupBox2.TabIndex = 0;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "groupBox2";
+            this.moveAnEdgeMenuItem.Name = "moveAnEdgeMenuItem";
+            this.moveAnEdgeMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.moveAnEdgeMenuItem.Text = "Move an edge";
+            this.moveAnEdgeMenuItem.Click += new System.EventHandler(this.moveAnEdgeMenuItem_Click);
             // 
             // mainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.splitContainer1);
+            this.Controls.Add(this.mainPictureBox);
             this.Name = "mainWindow";
             this.Text = "poligonEditor";
             this.Resize += new System.EventHandler(this.mainWindow_Resize);
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
-            this.splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.mainPictureBox)).EndInit();
-            this.splitContainer2.Panel1.ResumeLayout(false);
-            this.splitContainer2.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
-            this.splitContainer2.ResumeLayout(false);
+            this.contextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.PictureBox mainPictureBox;
-        private System.Windows.Forms.SplitContainer splitContainer2;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem addAPointMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem movaAPointMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem moveAnEdgeMenuItem;
     }
 }
 
