@@ -35,6 +35,7 @@
             this.movaAPointMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.moveAnEdgeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.moveAPoligonMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.deleteAPointMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.mainPictureBox)).BeginInit();
             this.contextMenuStrip.SuspendLayout();
             this.SuspendLayout();
@@ -57,9 +58,10 @@
             this.addAPointMenuItem,
             this.movaAPointMenuItem,
             this.moveAnEdgeMenuItem,
-            this.moveAPoligonMenuItem});
+            this.moveAPoligonMenuItem,
+            this.deleteAPointMenuItem});
             this.contextMenuStrip.Name = "contextMenuStrip";
-            this.contextMenuStrip.Size = new System.Drawing.Size(181, 114);
+            this.contextMenuStrip.Size = new System.Drawing.Size(181, 136);
             // 
             // addAPointMenuItem
             // 
@@ -91,6 +93,13 @@
             this.moveAPoligonMenuItem.Text = "Move a poligon";
             this.moveAPoligonMenuItem.Click += new System.EventHandler(this.moveAPoligonMenuItem_Click);
             // 
+            // deleteAPointMenuItem
+            // 
+            this.deleteAPointMenuItem.Name = "deleteAPointMenuItem";
+            this.deleteAPointMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.deleteAPointMenuItem.Text = "Delete a point";
+            this.deleteAPointMenuItem.Click += new System.EventHandler(this.deleteAPointMenuItem_Click);
+            // 
             // mainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -114,6 +123,7 @@
         private System.Windows.Forms.ToolStripMenuItem movaAPointMenuItem;
         private System.Windows.Forms.ToolStripMenuItem moveAnEdgeMenuItem;
         private System.Windows.Forms.ToolStripMenuItem moveAPoligonMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem deleteAPointMenuItem;
     }
 }
 

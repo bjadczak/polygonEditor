@@ -185,6 +185,37 @@ namespace poligonEditor
                 drawOnPictureBox();
             }
         }
+        // Removing point
+        private void deletePoint(int X, int Y)
+        {
+            components.Point actPoint = new components.Point(X, Y);
+            poligonEditor.components.Point closest = poligonEditor.components.Point.findClosest(allPoints, actPoint);
+
+            if (!(closest is null))
+            {
+                foreach(var p in poli)
+                {
+                    if (p.containsPoint(closest))
+                    {
+                        if(p.Count <= 2)
+                        {
+                            poli.Remove(p);
+                            foreach (components.Point point in p.GetPoints())
+                            {
+                                allPoints.Remove(point);
+                            }
+                            return;
+                        }
+                        else
+                        {
+                            p.deletePoint(closest);
+                            allPoints.Remove(closest);
+                            return;
+                        }
+                    }
+                }
+            }
+        }
 
         private void clickOnPictureBox(object sender, MouseEventArgs e)
         {
@@ -212,6 +243,11 @@ namespace poligonEditor
                         case misc.enums.mode.movingPoligon:
                             {
                                 movePoligon(e.X, e.Y);
+                            }
+                            break;
+                        case misc.enums.mode.deletingPoint:
+                            {
+                                deletePoint(e.X, e.Y);
                             }
                             break;
                         default:
@@ -300,6 +336,13 @@ namespace poligonEditor
             resetContextMenu();
             moveAPoligonMenuItem.Checked = true;
             activeMode = misc.enums.mode.movingPoligon;
+        }
+
+        private void deleteAPointMenuItem_Click(object sender, EventArgs e)
+        {
+            resetContextMenu();
+            deleteAPointMenuItem.Checked = true;
+            activeMode = misc.enums.mode.deletingPoint;
         }
     }
 }

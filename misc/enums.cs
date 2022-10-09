@@ -14,6 +14,7 @@ namespace poligonEditor.misc
             movingPoint,
             movingEdge,
             movingPoligon,
+            deletingPoint,
         }
     }
 }

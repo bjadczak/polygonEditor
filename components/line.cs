@@ -105,6 +105,15 @@ namespace poligonEditor.components
             Pt1.movePointByDelta(secondPoint.x - firstPoint.x, secondPoint.y - firstPoint.y);
             Pt2.movePointByDelta(secondPoint.x - firstPoint.x, secondPoint.y - firstPoint.y);
         }
+        public void setPt1(components.Point newPt1)
+        {
+            Pt1 = newPt1;
+        }
+
+        public void setPt2(components.Point newPt2)
+        {
+            Pt2 = newPt2;
+        }
 
     }
 }

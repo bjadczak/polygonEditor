@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolTip;
 
 namespace poligonEditor.components
@@ -21,6 +22,9 @@ namespace poligonEditor.components
 
         // Create pen for temporary line.
         Pen grayPen = new Pen(Color.Gray, components.Line.width);
+
+        // Count of lines
+        public int Count { get => lines.Count; }
 
         // Constructor for empty poligon and one with only one point (startingPoint)
         public Poligon()
@@ -128,10 +132,17 @@ namespace poligonEditor.components
             foreach (components.Line l in lines)
             {
                 yield return l.Pt1;
-                //yield return l.Pt2;
             }
         }
         public bool containsLine(components.Line line) => lines.Contains(line);
+        public bool containsPoint(components.Point point)
+        {
+            foreach(var l in lines)
+            {
+                if (l.Pt1 == point) return true; 
+            }
+            return false;
+        }
 
         public void movePoligon(poligonEditor.components.Point firstPoint, poligonEditor.components.Point secondPoint)
         {
@@ -139,6 +150,23 @@ namespace poligonEditor.components
             {
                 p.movePointByDelta(secondPoint.x - firstPoint.x, secondPoint.y - firstPoint.y);
             }
+        }
+
+        public void deletePoint(components.Point point)
+        {
+            if (Count <= 2) throw new InvalidOperationException("Too few points in poligon");
+            components.Line l1 = null, l2 = null;
+            foreach(var l in lines)
+            {
+                if (l.Pt2 == point) l1 = l;
+                if (l.Pt1 == point) l2 = l;
+            }
+            if (l1 is null || l2 is null) throw new InvalidOperationException("Uknown error");
+            if (point == startingPoint) startingPoint = finishingPoint = l1.Pt1;
+            l1.setPt2(l2.Pt2);
+            lines.Remove(l2);
+
+
         }
         
     }
