@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolTip;
 
 namespace poligonEditor.components
 {
@@ -127,44 +128,19 @@ namespace poligonEditor.components
             foreach (components.Line l in lines)
             {
                 yield return l.Pt1;
-                yield return l.Pt2;
+                //yield return l.Pt2;
             }
         }
-    }
+        public bool containsLine(components.Line line) => lines.Contains(line);
 
-    internal class PoligonConstructor
-    {
-        public components.Poligon tmpPoligon;
-
-        public void createPoligon()
+        public void movePoligon(poligonEditor.components.Point firstPoint, poligonEditor.components.Point secondPoint)
         {
-            //if (tmpPoligon is null)
-            //{
-            //    components.Point tmpPoint = new components.Point(e.X, e.Y);
-            //    tmpPoligon = new components.Poligon(tmpPoint);
-            //    //allPoints.Add(tmpPoint);
-            //}
-            //else
-            //{
-            //    //movingPoint = null;
-            //    components.Point tmpPoint = new components.Point(e.X, e.Y);
-            //    tmpPoligon.addNewPoint(tmpPoint);
-            //    //allPoints.Add(tmpPoint);
-
-
-            //    if (tmpPoligon.isPoligonComplet())
-            //    {
-            //        poli.Add(tmpPoligon);
-            //        tmpPoligon = null;
-            //        drawOnPictureBox();
-            //    }
-            //    else
-            //    {
-            //        tmpPoligon.Draw(drawArea);
-            //        mainPictureBox.Refresh();
-            //    }
-            //}
+            foreach(var p in GetPoints())
+            {
+                p.movePointByDelta(secondPoint.x - firstPoint.x, secondPoint.y - firstPoint.y);
+            }
         }
-
+        
     }
+
 }

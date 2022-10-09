@@ -34,6 +34,7 @@
             this.addAPointMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.movaAPointMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.moveAnEdgeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.moveAPoligonMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.mainPictureBox)).BeginInit();
             this.contextMenuStrip.SuspendLayout();
             this.SuspendLayout();
@@ -55,9 +56,10 @@
             this.contextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addAPointMenuItem,
             this.movaAPointMenuItem,
-            this.moveAnEdgeMenuItem});
+            this.moveAnEdgeMenuItem,
+            this.moveAPoligonMenuItem});
             this.contextMenuStrip.Name = "contextMenuStrip";
-            this.contextMenuStrip.Size = new System.Drawing.Size(181, 92);
+            this.contextMenuStrip.Size = new System.Drawing.Size(181, 114);
             // 
             // addAPointMenuItem
             // 
@@ -82,6 +84,13 @@
             this.moveAnEdgeMenuItem.Text = "Move an edge";
             this.moveAnEdgeMenuItem.Click += new System.EventHandler(this.moveAnEdgeMenuItem_Click);
             // 
+            // moveAPoligonMenuItem
+            // 
+            this.moveAPoligonMenuItem.Name = "moveAPoligonMenuItem";
+            this.moveAPoligonMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.moveAPoligonMenuItem.Text = "Move a poligon";
+            this.moveAPoligonMenuItem.Click += new System.EventHandler(this.moveAPoligonMenuItem_Click);
+            // 
             // mainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -104,6 +113,7 @@
         private System.Windows.Forms.ToolStripMenuItem addAPointMenuItem;
         private System.Windows.Forms.ToolStripMenuItem movaAPointMenuItem;
         private System.Windows.Forms.ToolStripMenuItem moveAnEdgeMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem moveAPoligonMenuItem;
     }
 }
 

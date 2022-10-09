@@ -36,6 +36,8 @@ namespace poligonEditor
         components.Point holdingPoint = null;
         // Line of poligon we are moving
         components.Line holdingLine = null;
+        // Poligon we are moving
+        components.Poligon holdingPoligon = null;
 
         // Active mode of input
         misc.enums.mode activeMode = misc.enums.mode.addingPoint;
@@ -136,6 +138,8 @@ namespace poligonEditor
         private void resetOnRMB()
         {
             holdingPoint = null;
+            holdingLine = null;
+            holdingPoligon = null;
             if (!(tmpPoli is null)) foreach (components.Point p in tmpPoli.GetPoints())
             {
                 allPoints.Remove(p);
@@ -157,6 +161,29 @@ namespace poligonEditor
                 drawOnPictureBox();
             }
 
+        }
+        // We are moving poligon if we grab it by line
+        private void movePoligon(int X, int Y)
+        {
+            components.Point actPoint = new components.Point(X, Y);
+            poligonEditor.components.Line closest = poligonEditor.components.Line.findFirstOnLine(poligonEditor.components.Poligon.GetLinesFrom(poli), actPoint);
+            if (!(closest is null))
+            {
+                foreach (var p in poli)
+                {
+                    if (p.containsLine(closest))
+                    {
+                        holdingPoligon = p;
+                        break;
+                    }
+                }
+
+                if (holdingPoligon is null) throw new InvalidOperationException("No poligons set");
+
+                movingPoint = actPoint;
+
+                drawOnPictureBox();
+            }
         }
 
         private void clickOnPictureBox(object sender, MouseEventArgs e)
@@ -180,6 +207,11 @@ namespace poligonEditor
                         case misc.enums.mode.movingEdge:
                             {
                                 moveAnEdge(e.X, e.Y);
+                            }
+                            break;
+                        case misc.enums.mode.movingPoligon:
+                            {
+                                movePoligon(e.X, e.Y);
                             }
                             break;
                         default:
@@ -206,18 +238,23 @@ namespace poligonEditor
         // they click
         private void mouseMoveOverCanvas(object sender, MouseEventArgs e)
         {
-            if (tmpPoli is null && holdingPoint is null && holdingLine is null) return;
+            //if (tmpPoli is null && holdingPoint is null && holdingLine is null) return;
 
             poligonEditor.components.Point tmp = movingPoint;
             movingPoint = new components.Point(e.X, e.Y);
 
-            if (!(holdingPoint is null)) holdingPoint.movePoint(movingPoint);
+            if (!(holdingPoint is null)) 
+                holdingPoint.movePoint(movingPoint);
             else if (!(holdingLine is null) && !(tmp is null))
             {
                 holdingLine.moveLine(tmp, movingPoint);
             }
+            else if (!(holdingPoligon is null) && !(tmp is null))
+            {
+                holdingPoligon.movePoligon(tmp, movingPoint);
+            }
 
-                drawOnPictureBox();
+            drawOnPictureBox();
 
             mainPictureBox.Refresh();
         }
@@ -226,6 +263,7 @@ namespace poligonEditor
         {
             holdingPoint = null;
             holdingLine = null;
+            holdingPoligon = null;
         }
 
         private void resetContextMenu()
@@ -255,6 +293,13 @@ namespace poligonEditor
             resetContextMenu();
             moveAnEdgeMenuItem.Checked = true;
             activeMode = misc.enums.mode.movingEdge;
+        }
+
+        private void moveAPoligonMenuItem_Click(object sender, EventArgs e)
+        {
+            resetContextMenu();
+            moveAPoligonMenuItem.Checked = true;
+            activeMode = misc.enums.mode.movingPoligon;
         }
     }
 }

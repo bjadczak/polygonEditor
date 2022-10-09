@@ -13,6 +13,7 @@ namespace poligonEditor.misc
             addingPoint,
             movingPoint,
             movingEdge,
+            movingPoligon,
         }
     }
 }
