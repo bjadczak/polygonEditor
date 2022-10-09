@@ -19,7 +19,7 @@ namespace poligonEditor.components
         private components.Point finishingPoint;
 
         // Create pen for temporary line.
-        Pen grayPen = new Pen(Color.Gray, 3);
+        Pen grayPen = new Pen(Color.Gray, components.Line.width);
 
         // Constructor for empty poligon and one with only one point (startingPoint)
         public Poligon()
@@ -103,6 +103,23 @@ namespace poligonEditor.components
             using (Graphics g = Graphics.FromImage(drawArea))
             {
                 g.DrawLine(grayPen, (System.Drawing.Point)finishingPoint, (System.Drawing.Point)pt);
+            }
+        }
+        public IEnumerable<poligonEditor.components.Line> GetLines()
+        {
+            foreach (components.Line l in lines)
+            {
+                yield return l;
+            }
+        }
+        public static IEnumerable<poligonEditor.components.Line> GetLinesFrom(IEnumerable<poligonEditor.components.Poligon> poligons)
+        {
+            foreach(components.Poligon p in poligons)
+            {
+                foreach(poligonEditor.components.Line l in p.GetLines())
+                {
+                    yield return l;
+                }
             }
         }
         public IEnumerable<poligonEditor.components.Point> GetPoints()

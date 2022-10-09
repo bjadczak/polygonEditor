@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -64,11 +65,22 @@ namespace poligonEditor.components
             this.x = x;
             this.y = y;
         }
+        public void movePointByDelta(double x, double y)
+        {
+            this.x += x;
+            this.y += y;
+        }
+        public void movePointByDelta(components.Point p)
+        {
+            this.x += p.x;
+            this.y += p.y;
+        }
         public void movePoint(components.Point p)
         {
             this.x = p.x;
             this.y = p.y;
         }
+
         // We can check if point is close enough to be selected
         public bool inSelectingDistance(components.Point mouse)
         {

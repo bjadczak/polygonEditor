@@ -1,4 +1,5 @@
-﻿using System;
+﻿using poligonEditor.components;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -33,6 +34,8 @@ namespace poligonEditor
 
         // Point of poligon we are moving
         components.Point holdingPoint = null;
+        // Line of poligon we are moving
+        components.Line holdingLine = null;
 
         // Active mode of input
         misc.enums.mode activeMode = misc.enums.mode.addingPoint;
@@ -117,15 +120,43 @@ namespace poligonEditor
         }
         private void moveAPoint(int X, int Y)
         {
+            components.Point actPoint = new components.Point(X, Y);
             // Moving a point we check which point is selected
-            poligonEditor.components.Point closest = poligonEditor.components.Point.findClosest(allPoints, new components.Point(X, Y));
+            poligonEditor.components.Point closest = poligonEditor.components.Point.findClosest(allPoints, actPoint);
 
             if (!(closest is null))
             {
                 holdingPoint = closest;
 
+                movingPoint = actPoint;
+
                 drawOnPictureBox();
             }
+        }
+        private void resetOnRMB()
+        {
+            holdingPoint = null;
+            if (!(tmpPoli is null)) foreach (components.Point p in tmpPoli.GetPoints())
+            {
+                allPoints.Remove(p);
+            }
+            tmpPoli = null;
+
+            drawOnPictureBox();
+        }
+        private void moveAnEdge(int X, int Y)
+        {
+            components.Point actPoint = new components.Point(X, Y);
+            poligonEditor.components.Line closest = poligonEditor.components.Line.findFirstOnLine(poligonEditor.components.Poligon.GetLinesFrom(poli), actPoint);
+            if (!(closest is null))
+            {
+                holdingLine = closest;
+
+                movingPoint = actPoint;
+
+                drawOnPictureBox();
+            }
+
         }
 
         private void clickOnPictureBox(object sender, MouseEventArgs e)
@@ -147,6 +178,10 @@ namespace poligonEditor
                             }
                             break;
                         case misc.enums.mode.movingEdge:
+                            {
+                                moveAnEdge(e.X, e.Y);
+                            }
+                            break;
                         default:
                             break;
                     }
@@ -154,18 +189,10 @@ namespace poligonEditor
                     break;
                 case MouseButtons.Right:
                     // We open context menu
+                    // First we get rid of any poligos in creation, and lose moving points
+                    resetOnRMB();
 
-                    // First we sispose of any poligos in creation, and lose moving points
-                    holdingPoint = null;
-                    if(!(tmpPoli is null))foreach(components.Point p in tmpPoli.GetPoints())
-                    {
-                        allPoints.Remove(p);
-                    }
-                    tmpPoli = null;
-
-                    drawOnPictureBox();
-
-                    contextMenuStrip.Show(this, new Point(e.X, e.Y));
+                    contextMenuStrip.Show(this, new System.Drawing.Point(e.X, e.Y));
 
                     break;
                 case MouseButtons.Middle:
@@ -179,13 +206,18 @@ namespace poligonEditor
         // they click
         private void mouseMoveOverCanvas(object sender, MouseEventArgs e)
         {
-            if (tmpPoli is null && holdingPoint is null) return;
+            if (tmpPoli is null && holdingPoint is null && holdingLine is null) return;
 
+            poligonEditor.components.Point tmp = movingPoint;
             movingPoint = new components.Point(e.X, e.Y);
 
             if (!(holdingPoint is null)) holdingPoint.movePoint(movingPoint);
+            else if (!(holdingLine is null) && !(tmp is null))
+            {
+                holdingLine.moveLine(tmp, movingPoint);
+            }
 
-            drawOnPictureBox();
+                drawOnPictureBox();
 
             mainPictureBox.Refresh();
         }
@@ -193,6 +225,7 @@ namespace poligonEditor
         private void endOfClickOnPictureBox(object sender, MouseEventArgs e)
         {
             holdingPoint = null;
+            holdingLine = null;
         }
 
         private void resetContextMenu()
