@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Net.WebSockets;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -82,6 +83,51 @@ namespace poligonEditor
             mainPictureBox.Refresh();
         }
 
+        private void addAPoint(int X, int Y)
+        {
+            components.Point actPoint = new components.Point(X, Y);
+            // Check if we are creating new poligon from scrach
+            if (tmpPoli is null)
+            {
+                // Check if we are overlapping with existing poligon point
+                if (!(poligonEditor.components.Poligon.checkOverallping(actPoint, allPoints) is null)) return;
+                tmpPoli = new components.Poligon(actPoint);
+                allPoints.Add(actPoint);
+            }
+            else
+            {
+                movingPoint = null;
+                if (tmpPoli.addNewPoint(actPoint, allPoints))
+                {
+                    allPoints.Add(actPoint);
+
+                    if (tmpPoli.isPoligonComplet())
+                    {
+                        poli.Add(tmpPoli);
+                        tmpPoli = null;
+                        drawOnPictureBox();
+                    }
+                    else
+                    {
+                        tmpPoli.Draw(drawArea);
+                        mainPictureBox.Refresh();
+                    }
+                }
+            }
+        }
+        private void moveAPoint(int X, int Y)
+        {
+            // Moving a point we check which point is selected
+            poligonEditor.components.Point closest = poligonEditor.components.Point.findClosest(allPoints, new components.Point(X, Y));
+
+            if (!(closest is null))
+            {
+                holdingPoint = closest;
+
+                drawOnPictureBox();
+            }
+        }
+
         private void clickOnPictureBox(object sender, MouseEventArgs e)
         {
             // Deside which button was pressed
@@ -92,56 +138,12 @@ namespace poligonEditor
                     {
                         case misc.enums.mode.addingPoint:
                             {
-                                // TODO: Add stopping of creation of new poligon
-                                components.Point actPoint = new components.Point(e.X, e.Y);
-                                // Check if we are creating new poligon from scrach
-                                if (tmpPoli is null)
-                                {
-                                    // Check if we are overlapping with existing poligon point
-                                    if (!(poligonEditor.components.Poligon.checkOverallping(actPoint, allPoints) is null)) return;
-                                    tmpPoli = new components.Poligon(actPoint);
-                                    allPoints.Add(actPoint);
-                                }
-                                else
-                                {
-                                    movingPoint = null;
-                                    if (tmpPoli.addNewPoint(actPoint, allPoints))
-                                    {
-                                        allPoints.Add(actPoint);
-
-                                        if (tmpPoli.isPoligonComplet())
-                                        {
-                                            poli.Add(tmpPoli);
-                                            tmpPoli = null;
-                                            drawOnPictureBox();
-                                        }
-                                        else
-                                        {
-                                            tmpPoli.Draw(drawArea);
-                                            mainPictureBox.Refresh();
-                                        }
-                                    }
-                                }
+                                addAPoint(e.X, e.Y);
                             }
                             break;
                         case misc.enums.mode.movingPoint:
                             {
-                                // Moving a point we check which point is selected
-                                if (allPoints.Count <= 0 || !(tmpPoli is null)) return;
-                                components.Point actPoint = new components.Point(e.X, e.Y);
-                                components.Point closest = null;
-
-                                foreach (components.Point p in allPoints)
-                                {
-                                    if (p.inSelectingDistance(actPoint) && (closest is null || actPoint.getDistance(p) < actPoint.getDistance(closest))) closest = p;
-                                }
-
-                                if (!(closest is null))
-                                {
-                                    holdingPoint = closest;
-
-                                    drawOnPictureBox();
-                                }
+                                moveAPoint(e.X, e.Y);
                             }
                             break;
                         case misc.enums.mode.movingEdge:
@@ -160,6 +162,8 @@ namespace poligonEditor
                         allPoints.Remove(p);
                     }
                     tmpPoli = null;
+
+                    drawOnPictureBox();
 
                     contextMenuStrip.Show(this, new Point(e.X, e.Y));
 

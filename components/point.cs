@@ -80,5 +80,19 @@ namespace poligonEditor.components
         {
             return this.getDistance(secondPoint) <= pointSize*5;
         }
+
+        public static components.Point findClosest(IEnumerable<components.Point> points, components.Point point)
+        {
+            if (points.Count() <= 0) return null;
+
+            components.Point closest = null;
+
+            foreach (components.Point p in points)
+            {
+                if (p.inSelectingDistance(point) && (closest is null || point.getDistance(p) < point.getDistance(closest))) closest = p;
+            }
+
+            return closest;
+        }
     }
 }
