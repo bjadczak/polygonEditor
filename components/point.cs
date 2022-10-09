@@ -16,6 +16,9 @@ namespace poligonEditor.components
         public double x { get; private set; }
         public double y { get; private set; }
 
+        // Size of displayed point
+        const int pointSize = 8;
+
         public Point(double x, double y)
         {
             this.InstanceID = Guid.NewGuid();
@@ -38,9 +41,9 @@ namespace poligonEditor.components
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
-
+        // Method to recive comparable distance to a second point
         public static double getDistance(components.Point firstPoint, components.Point secondPoint)
         {
             return (firstPoint.x - secondPoint.x) * (firstPoint.x - secondPoint.x) + (firstPoint.y - secondPoint.y) * (firstPoint.y - secondPoint.y);
@@ -52,9 +55,7 @@ namespace poligonEditor.components
         }
 
         private void drawCircle(Graphics g, float x, float y)
-        {
-            const int pointSize = 8;
-            
+        {  
             g.FillEllipse((Brush)Brushes.DarkCyan, x - pointSize/2, y - pointSize/2, pointSize, pointSize);
         }
 
@@ -67,6 +68,17 @@ namespace poligonEditor.components
         {
             this.x = p.x;
             this.y = p.y;
+        }
+        // We can check if point is close enough to be selected
+        public bool inSelectingDistance(components.Point mouse)
+        {
+            const int selectionDistance = 8*pointSize;
+            return this.getDistance(mouse) < selectionDistance;
+        }
+        // We can check if placing here second point, will lead to overlapping
+        public bool isOverlapping(components.Point secondPoint)
+        {
+            return this.getDistance(secondPoint) <= pointSize*5;
         }
     }
 }

@@ -4,11 +4,13 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using static System.Windows.Forms.LinkLabel;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolTip;
 
 namespace poligonEditor
 {
@@ -91,43 +93,55 @@ namespace poligonEditor
                         case misc.enums.mode.addingPoint:
                             {
                                 // TODO: Add stopping of creation of new poligon
+                                components.Point actPoint = new components.Point(e.X, e.Y);
+                                // Check if we are creating new poligon from scrach
                                 if (tmpPoli is null)
                                 {
-                                    components.Point tmpPoint = new components.Point(e.X, e.Y);
-                                    tmpPoli = new components.Poligon(tmpPoint);
-                                    allPoints.Add(tmpPoint);
+                                    // Check if we are overlapping with existing poligon point
+                                    if (!(poligonEditor.components.Poligon.checkOverallping(actPoint, allPoints) is null)) return;
+                                    tmpPoli = new components.Poligon(actPoint);
+                                    allPoints.Add(actPoint);
                                 }
                                 else
                                 {
                                     movingPoint = null;
-                                    components.Point tmpPoint = new components.Point(e.X, e.Y);
-                                    tmpPoli.addNewPoint(tmpPoint);
-                                    allPoints.Add(tmpPoint);
-
-                                    tmpPoli.Draw(drawArea);
-                                    mainPictureBox.Refresh();
-                                    if (tmpPoli.isPoligonComplet())
+                                    if (tmpPoli.addNewPoint(actPoint, allPoints))
                                     {
-                                        poli.Add(tmpPoli);
-                                        tmpPoli = null;
+                                        allPoints.Add(actPoint);
+
+                                        if (tmpPoli.isPoligonComplet())
+                                        {
+                                            poli.Add(tmpPoli);
+                                            tmpPoli = null;
+                                            drawOnPictureBox();
+                                        }
+                                        else
+                                        {
+                                            tmpPoli.Draw(drawArea);
+                                            mainPictureBox.Refresh();
+                                        }
                                     }
                                 }
                             }
                             break;
                         case misc.enums.mode.movingPoint:
                             {
-                                if (allPoints.Count <= 0 || !(tmpPoli is null)) break;
+                                // Moving a point we check which point is selected
+                                if (allPoints.Count <= 0 || !(tmpPoli is null)) return;
                                 components.Point actPoint = new components.Point(e.X, e.Y);
-                                components.Point closest = allPoints[0];
+                                components.Point closest = null;
 
                                 foreach (components.Point p in allPoints)
                                 {
-                                    if (actPoint.getDistance(p) < actPoint.getDistance(closest)) closest = p;
+                                    if (p.inSelectingDistance(actPoint) && (closest is null || actPoint.getDistance(p) < actPoint.getDistance(closest))) closest = p;
                                 }
 
-                                holdingPoint = closest;
+                                if (!(closest is null))
+                                {
+                                    holdingPoint = closest;
 
-                                drawOnPictureBox();
+                                    drawOnPictureBox();
+                                }
                             }
                             break;
                         case misc.enums.mode.movingEdge:
@@ -138,6 +152,15 @@ namespace poligonEditor
                     break;
                 case MouseButtons.Right:
                     // We open context menu
+
+                    // First we sispose of any poligos in creation, and lose moving points
+                    holdingPoint = null;
+                    if(!(tmpPoli is null))foreach(components.Point p in tmpPoli.GetPoints())
+                    {
+                        allPoints.Remove(p);
+                    }
+                    tmpPoli = null;
+
                     contextMenuStrip.Show(this, new Point(e.X, e.Y));
 
                     break;

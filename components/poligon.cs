@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,8 +17,6 @@ namespace poligonEditor.components
 
         public components.Point startingPoint { get; private set; }
         private components.Point finishingPoint;
-
-        private const int precisionOfFinishing = 16;
 
         // Create pen for temporary line.
         Pen grayPen = new Pen(Color.Gray, 3);
@@ -48,15 +47,39 @@ namespace poligonEditor.components
             startingPoint = finishingPoint = pt;
         }
 
-        public void addNewPoint(components.Point pt)
+        public bool addNewPoint(components.Point pt, List<components.Point> allPoints)
         {
             if (isPoligonComplet()) throw new InvalidOperationException("Poligon already complet");
 
-            if (pt.getDistance(startingPoint) < precisionOfFinishing) pt = startingPoint;
+            using (var tmp = checkOverallping(pt, allPoints))
+            {
+                if (!(tmp is null))
+                {
+                    if (tmp.InstanceID == startingPoint.InstanceID)
+                    {
+                        pt = startingPoint;
+                    }
+                    else return false;
+                }
+            }
 
             lines.Add(new components.Line(finishingPoint, pt));
             finishingPoint = pt;
+            return true;
 
+        }
+
+        public static components.Point checkOverallping(components.Point pt, List<components.Point> allPoints)
+        {
+            if (allPoints.Count > 0)
+            {
+                foreach (components.Point p in allPoints)
+                {
+                    if (p.isOverlapping(pt))
+                        return p;
+                }
+            }
+            return null;
         }
 
         public void Draw(Bitmap drawArea)
@@ -82,5 +105,49 @@ namespace poligonEditor.components
                 g.DrawLine(grayPen, (System.Drawing.Point)finishingPoint, (System.Drawing.Point)pt);
             }
         }
+        public IEnumerable<poligonEditor.components.Point> GetPoints()
+        {
+            foreach (components.Line l in lines)
+            {
+                yield return l.Pt1;
+                yield return l.Pt2;
+            }
+        }
+    }
+
+    internal class PoligonConstructor
+    {
+        public components.Poligon tmpPoligon;
+
+        public void createPoligon()
+        {
+            //if (tmpPoligon is null)
+            //{
+            //    components.Point tmpPoint = new components.Point(e.X, e.Y);
+            //    tmpPoligon = new components.Poligon(tmpPoint);
+            //    //allPoints.Add(tmpPoint);
+            //}
+            //else
+            //{
+            //    //movingPoint = null;
+            //    components.Point tmpPoint = new components.Point(e.X, e.Y);
+            //    tmpPoligon.addNewPoint(tmpPoint);
+            //    //allPoints.Add(tmpPoint);
+
+
+            //    if (tmpPoligon.isPoligonComplet())
+            //    {
+            //        poli.Add(tmpPoligon);
+            //        tmpPoligon = null;
+            //        drawOnPictureBox();
+            //    }
+            //    else
+            //    {
+            //        tmpPoligon.Draw(drawArea);
+            //        mainPictureBox.Refresh();
+            //    }
+            //}
+        }
+
     }
 }
