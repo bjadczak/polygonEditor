@@ -24,8 +24,8 @@ namespace poligonEditor
         // List of poligons we have on the screen
         List<components.Poligon> poli = new List<components.Poligon>();
 
-        // Listo of references to all points(verteces)
-        List<components.Point> allPoints = new List<components.Point>();
+        // Listo of references to points of poli that is being build
+        List<components.Point> buildingPoints = new List<components.Point>();
 
         components.Poligon tmpPoli = null;
 
@@ -91,25 +91,29 @@ namespace poligonEditor
         private void addAPoint(int X, int Y)
         {
             components.Point actPoint = new components.Point(X, Y);
+            // If we are building poligon, check if new point is overlapping with already added
+            if (buildingPoints.Count() > 0 && !(poligonEditor.components.Poligon.checkOverallping(actPoint, buildingPoints, tmpPoli.startingPoint) is null)) return;
+
             // Check if we are creating new poligon from scrach
             if (tmpPoli is null)
             {
                 // Check if we are overlapping with existing poligon point
-                if (!(poligonEditor.components.Poligon.checkOverallping(actPoint, allPoints) is null)) return;
+                if (!(poligonEditor.components.Poligon.checkOverallping(actPoint, poligonEditor.components.Poligon.GetPointsFrom(poli)) is null)) return;
                 tmpPoli = new components.Poligon(actPoint);
-                allPoints.Add(actPoint);
+                buildingPoints.Add(actPoint);
             }
             else
             {
                 movingPoint = null;
-                if (tmpPoli.addNewPoint(actPoint, allPoints))
+                if (tmpPoli.addNewPoint(actPoint, poligonEditor.components.Poligon.GetPointsFrom(poli)))
                 {
-                    allPoints.Add(actPoint);
+                    buildingPoints.Add(actPoint);
 
                     if (tmpPoli.isPoligonComplet())
                     {
                         poli.Add(tmpPoli);
                         tmpPoli = null;
+                        buildingPoints.Clear();
                         drawOnPictureBox();
                     }
                     else
@@ -124,7 +128,7 @@ namespace poligonEditor
         {
             components.Point actPoint = new components.Point(X, Y);
             // Moving a point we check which point is selected
-            poligonEditor.components.Point closest = poligonEditor.components.Point.findClosest(allPoints, actPoint);
+            poligonEditor.components.Point closest = poligonEditor.components.Point.findClosest(poligonEditor.components.Poligon.GetPointsFrom(poli), actPoint);
 
             if (!(closest is null))
             {
@@ -142,7 +146,7 @@ namespace poligonEditor
             holdingPoligon = null;
             if (!(tmpPoli is null)) foreach (components.Point p in tmpPoli.GetPoints())
             {
-                allPoints.Remove(p);
+                buildingPoints.Remove(p);
             }
             tmpPoli = null;
 
@@ -189,7 +193,7 @@ namespace poligonEditor
         private void deletePoint(int X, int Y)
         {
             components.Point actPoint = new components.Point(X, Y);
-            poligonEditor.components.Point closest = poligonEditor.components.Point.findClosest(allPoints, actPoint);
+            poligonEditor.components.Point closest = poligonEditor.components.Point.findClosest(poligonEditor.components.Poligon.GetPointsFrom(poli), actPoint);
 
             if (!(closest is null))
             {
@@ -200,16 +204,11 @@ namespace poligonEditor
                         if(p.Count <= 2)
                         {
                             poli.Remove(p);
-                            foreach (components.Point point in p.GetPoints())
-                            {
-                                allPoints.Remove(point);
-                            }
                             return;
                         }
                         else
                         {
                             p.deletePoint(closest);
-                            allPoints.Remove(closest);
                             return;
                         }
                     }

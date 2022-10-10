@@ -23,12 +23,37 @@ namespace poligonEditor.components
         // Method of drawing lines
         public static bool useBresenhams = false;
 
-
         // Create drawing mechanisms
         Bresenham b = new Bresenham((Brush)Brushes.Black);
         defaultDrawing d = new defaultDrawing(new Pen(Color.Black, width));
 
-        // Information is line compleat
+        // Information for seting two lines as parrallel
+        public double atan 
+        { 
+            get
+            {
+                if (Pt1 is null || Pt2 is null) throw new InvalidOperationException("Cannot get angle of unfined line");
+                return Math.Atan((Pt2.y - Pt1.y) / (Pt2.x / Pt1.x));
+            } 
+        }
+
+        // Length for keeping it the same
+        public double length 
+        { 
+            get
+            {
+                return (Pt1.x - Pt2.x)*(Pt1.x - Pt2.x) + (Pt1.y - Pt2.y)*(Pt1.y - Pt2.y);
+            } 
+        }
+        public double displayLength
+        {
+            get
+            {
+                return Math.Sqrt(length);
+            } 
+        }
+
+        // Information if line id compleat
         public bool isLineComplet 
         { 
             get { return !(Pt1 is null || Pt2 is null); } 

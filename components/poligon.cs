@@ -52,11 +52,16 @@ namespace poligonEditor.components
             startingPoint = finishingPoint = pt;
         }
 
-        public bool addNewPoint(components.Point pt, List<components.Point> allPoints)
+        public bool addNewPoint(components.Point pt, IEnumerable<components.Point> allPoints)
         {
             if (isPoligonComplet()) throw new InvalidOperationException("Poligon already complet");
 
             using (var tmp = checkOverallping(pt, allPoints))
+            {
+                if (!(tmp is null))
+                    return false;
+            }
+            using (var tmp = checkOverallping(pt, this.GetPoints()))
             {
                 if (!(tmp is null))
                 {
@@ -74,14 +79,15 @@ namespace poligonEditor.components
 
         }
 
-        public static components.Point checkOverallping(components.Point pt, List<components.Point> allPoints)
+        public static components.Point checkOverallping(components.Point pt, IEnumerable<components.Point> allPoints, components.Point exceptThis = null)
         {
-            if (allPoints.Count > 0)
+            if (allPoints.Count() > 0)
             {
                 foreach (components.Point p in allPoints)
                 {
                     if (p.isOverlapping(pt))
-                        return p;
+                        if (!(exceptThis is null) && exceptThis == p) return null;
+                        else return p;
                 }
             }
             return null;
@@ -132,6 +138,16 @@ namespace poligonEditor.components
             foreach (components.Line l in lines)
             {
                 yield return l.Pt1;
+            }
+        }
+        public static IEnumerable<poligonEditor.components.Point> GetPointsFrom(IEnumerable<poligonEditor.components.Poligon> poligons)
+        {
+            foreach (components.Poligon p in poligons)
+            {
+                foreach (poligonEditor.components.Point pt in p.GetPoints())
+                {
+                    yield return pt;
+                }
             }
         }
         public bool containsLine(components.Line line) => lines.Contains(line);

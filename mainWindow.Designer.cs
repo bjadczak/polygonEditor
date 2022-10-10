@@ -48,7 +48,7 @@
             this.mainPictureBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mainPictureBox.Location = new System.Drawing.Point(0, 0);
             this.mainPictureBox.Name = "mainPictureBox";
-            this.mainPictureBox.Size = new System.Drawing.Size(800, 450);
+            this.mainPictureBox.Size = new System.Drawing.Size(784, 761);
             this.mainPictureBox.TabIndex = 3;
             this.mainPictureBox.TabStop = false;
             this.mainPictureBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.clickOnPictureBox);
@@ -65,7 +65,7 @@
             this.deleteAPointMenuItem,
             this.methodOfDrawingToolStripMenuItem});
             this.contextMenuStrip.Name = "contextMenuStrip";
-            this.contextMenuStrip.Size = new System.Drawing.Size(181, 158);
+            this.contextMenuStrip.Size = new System.Drawing.Size(177, 136);
             // 
             // addAPointMenuItem
             // 
@@ -133,7 +133,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(784, 761);
             this.Controls.Add(this.mainPictureBox);
             this.Name = "mainWindow";
             this.Text = "poligonEditor";
