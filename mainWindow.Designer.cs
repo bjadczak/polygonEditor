@@ -36,6 +36,9 @@
             this.moveAnEdgeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.moveAPoligonMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteAPointMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.methodOfDrawingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.defaultMethodOfDrawingMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.bresenhamsAlgorithmMethodOfDrawingMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.mainPictureBox)).BeginInit();
             this.contextMenuStrip.SuspendLayout();
             this.SuspendLayout();
@@ -59,9 +62,10 @@
             this.movaAPointMenuItem,
             this.moveAnEdgeMenuItem,
             this.moveAPoligonMenuItem,
-            this.deleteAPointMenuItem});
+            this.deleteAPointMenuItem,
+            this.methodOfDrawingToolStripMenuItem});
             this.contextMenuStrip.Name = "contextMenuStrip";
-            this.contextMenuStrip.Size = new System.Drawing.Size(181, 136);
+            this.contextMenuStrip.Size = new System.Drawing.Size(181, 158);
             // 
             // addAPointMenuItem
             // 
@@ -100,6 +104,31 @@
             this.deleteAPointMenuItem.Text = "Delete a point";
             this.deleteAPointMenuItem.Click += new System.EventHandler(this.deleteAPointMenuItem_Click);
             // 
+            // methodOfDrawingToolStripMenuItem
+            // 
+            this.methodOfDrawingToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.defaultMethodOfDrawingMenuItem,
+            this.bresenhamsAlgorithmMethodOfDrawingMenuItem});
+            this.methodOfDrawingToolStripMenuItem.Name = "methodOfDrawingToolStripMenuItem";
+            this.methodOfDrawingToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.methodOfDrawingToolStripMenuItem.Text = "Method of drawing";
+            // 
+            // defaultMethodOfDrawingMenuItem
+            // 
+            this.defaultMethodOfDrawingMenuItem.Checked = true;
+            this.defaultMethodOfDrawingMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.defaultMethodOfDrawingMenuItem.Name = "defaultMethodOfDrawingMenuItem";
+            this.defaultMethodOfDrawingMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.defaultMethodOfDrawingMenuItem.Text = "Default";
+            this.defaultMethodOfDrawingMenuItem.Click += new System.EventHandler(this.defaultMethodOfDrawingMenuItem_Click);
+            // 
+            // bresenhamsAlgorithmMethodOfDrawingMenuItem
+            // 
+            this.bresenhamsAlgorithmMethodOfDrawingMenuItem.Name = "bresenhamsAlgorithmMethodOfDrawingMenuItem";
+            this.bresenhamsAlgorithmMethodOfDrawingMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.bresenhamsAlgorithmMethodOfDrawingMenuItem.Text = "Bresenham\'s Algorithm";
+            this.bresenhamsAlgorithmMethodOfDrawingMenuItem.Click += new System.EventHandler(this.bresenhamsAlgorithmMethodOfDrawingMenuItem_Click);
+            // 
             // mainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -124,6 +153,9 @@
         private System.Windows.Forms.ToolStripMenuItem moveAnEdgeMenuItem;
         private System.Windows.Forms.ToolStripMenuItem moveAPoligonMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteAPointMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem methodOfDrawingToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem defaultMethodOfDrawingMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem bresenhamsAlgorithmMethodOfDrawingMenuItem;
     }
 }
 

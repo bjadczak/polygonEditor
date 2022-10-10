@@ -344,5 +344,21 @@ namespace poligonEditor
             deleteAPointMenuItem.Checked = true;
             activeMode = misc.enums.mode.deletingPoint;
         }
+
+        private void defaultMethodOfDrawingMenuItem_Click(object sender, EventArgs e)
+        {
+            bresenhamsAlgorithmMethodOfDrawingMenuItem.Checked = false;
+            defaultMethodOfDrawingMenuItem.Checked = true;
+            poligonEditor.components.Line.useBresenhams = false;
+            drawOnPictureBox();
+        }
+
+        private void bresenhamsAlgorithmMethodOfDrawingMenuItem_Click(object sender, EventArgs e)
+        {
+            defaultMethodOfDrawingMenuItem.Checked = false;
+            bresenhamsAlgorithmMethodOfDrawingMenuItem.Checked = true;
+            poligonEditor.components.Line.useBresenhams = true;
+            drawOnPictureBox();
+        }
     }
 }

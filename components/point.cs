@@ -14,13 +14,13 @@ namespace poligonEditor.components
         public Guid InstanceID { get; private set; }
 
         // Basic point information
-        public double x { get; private set; }
-        public double y { get; private set; }
+        public float x { get; private set; }
+        public float y { get; private set; }
 
         // Size of displayed point
         const int pointSize = 8;
 
-        public Point(double x, double y)
+        public Point(float x, float y)
         {
             this.InstanceID = Guid.NewGuid();
             this.x = x;
@@ -31,10 +31,7 @@ namespace poligonEditor.components
         {
             using (Graphics g = Graphics.FromImage(drawArea))
             {
-                // If we want to draw 1 pixel we use
-                // g.FillRectangle((Brush)Brushes.Black, x, y, 1, 1);
-
-                drawCircle(g, (float)x, (float)y);
+                drawCircle(g, x, y);
             }
         }
 
@@ -60,12 +57,12 @@ namespace poligonEditor.components
             g.FillEllipse((Brush)Brushes.DarkCyan, x - pointSize/2, y - pointSize/2, pointSize, pointSize);
         }
 
-        public void movePoint(double x, double y)
+        public void movePoint(float x, float y)
         {
             this.x = x;
             this.y = y;
         }
-        public void movePointByDelta(double x, double y)
+        public void movePointByDelta(float x, float y)
         {
             this.x += x;
             this.y += y;

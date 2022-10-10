@@ -20,8 +20,13 @@ namespace poligonEditor.components
 
         public const int width = 1;
 
-        // Create pen.
-        Pen blackPen = new Pen(Color.Black, width);
+        // Method of drawing lines
+        public static bool useBresenhams = false;
+
+
+        // Create drawing mechanisms
+        Bresenham b = new Bresenham((Brush)Brushes.Black);
+        defaultDrawing d = new defaultDrawing(new Pen(Color.Black, width));
 
         // Information is line compleat
         public bool isLineComplet 
@@ -61,13 +66,16 @@ namespace poligonEditor.components
         public void Draw(Bitmap drawArea)
         {
             if (Pt1 is null || Pt2 is null) throw new InvalidOperationException("Cannot draw lines without both points");
-            using (Graphics g = Graphics.FromImage(drawArea))
-            {
-                g.DrawLine(blackPen, (System.Drawing.Point)Pt1, (System.Drawing.Point)Pt2);
-            }
+            
+            lineDrawing drawing = useBresenhams ? (lineDrawing)b: (lineDrawing)d;
+
+
+            drawing.draw(drawArea, Pt1, Pt2);
             Pt1.Draw(drawArea);
             Pt2.Draw(drawArea);
         }
+
+        
 
         public void Dispose()
         {
@@ -115,5 +123,142 @@ namespace poligonEditor.components
             Pt2 = newPt2;
         }
 
+        internal class Bresenham : lineDrawing
+        {
+            private Brush brush;
+            public Bresenham(Brush brush)
+            {
+                this.brush = brush;
+            }
+            public void draw(Bitmap drawArea, Point point1, Point point2)
+            {
+                // We can "flip" x and y axis to draw negative and positive slopes
+                // Negative and positive as in what is the sign of first derivative
+                if (Math.Abs(point2.y - point1.y) < Math.Abs(point2.x - point1.x))
+                {
+                    // We can also "flip" points first and second to always go "right"
+                    if (point1.x > point2.x)
+                    {
+                        drawPositiveSlope(drawArea, point2, point1);
+                    }
+                    else
+                    {
+                        drawPositiveSlope(drawArea, point1, point2);
+                    }
+                }
+                else
+                {
+                    // Same as in top comment
+                    if (point1.y > point2.y)
+                    {
+                        drawNegativeSlope(drawArea, point2, point1);
+                    }
+                    else
+                    {
+                        drawNegativeSlope(drawArea, point1, point2);
+                    }
+                }
+
+            }
+
+            public void drawPositiveSlope(Bitmap drawArea, Point point1, Point point2)
+            {
+                int dx = (int)(point2.x - point1.x);
+                int dy = (int)(point2.y - point1.y);
+                int stepY = 1;
+                
+                // If we are going "down" we change the step direction
+                if(dy < 0)
+                {
+                    stepY *= -1;
+                    dy *= -1;
+                }
+                
+                int diff = (2 * dy) - dx;
+                components.Point point = new components.Point(point1.x, point1.y);
+
+                for(int i = 0; i<=Math.Abs(dx); i++)
+                {
+                    drawOnePoint(drawArea, point);
+                    // We move either to "right" or "up-right"
+                    if(diff > 0)
+                    {
+                        point.movePointByDelta(1, stepY);
+                        diff += 2 * (dy - dx);
+                    }
+                    else
+                    {
+                        point.movePointByDelta(1, 0);
+                        diff += 2 * dy;
+                    }
+                }
+
+            }
+
+            public void drawNegativeSlope(Bitmap drawArea, Point point1, Point point2)
+            {
+                int dx = (int)(point2.x - point1.x);
+                int dy = (int)(point2.y - point1.y);
+                int stepX = 1;
+
+                // If we are going "down" we change the step direction
+                if (dx < 0)
+                {
+                    stepX *= -1;
+                    dx *= -1;
+                }
+
+                int diff = (2 * dx) - dy;
+                components.Point point = new components.Point(point1.x, point1.y);
+
+                for (int i = 0; i <= Math.Abs(dy); i++)
+                {
+                    drawOnePoint(drawArea, point);
+                    // We move either to "right" or "up-right"
+                    if (diff > 0)
+                    {
+                        point.movePointByDelta(stepX, 1);
+                        diff += 2 * (dx - dy);
+                    }
+                    else
+                    {
+                        point.movePointByDelta(0, 1);
+                        diff += 2 * dx;
+                    }
+                }
+            }
+
+
+            private void drawOnePoint(Bitmap drawArea, Point point)
+            {
+                using (Graphics g = Graphics.FromImage(drawArea))
+                {
+                    g.FillRectangle(brush, point.x, point.y, 1, 1);
+                }
+            }
+        }
+
+        internal class defaultDrawing : lineDrawing
+        {
+            private Pen pen;
+
+            public defaultDrawing(Pen pen)
+            {
+                this.pen = pen;
+            }
+
+            public void draw(Bitmap drawArea, Point point1, Point point2)
+            {
+                using (Graphics g = Graphics.FromImage(drawArea))
+                {
+                    g.DrawLine(pen, (System.Drawing.Point)point1, (System.Drawing.Point)point2);
+                }
+            }
+        }
+
+    }
+    interface lineDrawing
+    {
+        void draw(Bitmap drawArea, components.Point point1, components.Point point2);
     }
 }
