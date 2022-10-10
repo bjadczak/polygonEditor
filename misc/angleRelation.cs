@@ -14,12 +14,27 @@ namespace poligonEditor.misc
             throw new NotImplementedException();
         }
 
+        public IEnumerable<Line> getLinesInRelation()
+        {
+            throw new NotImplementedException();
+        }
+
         public bool isThisLineInRelation(Line l)
         {
             throw new NotImplementedException();
         }
 
+        public bool isThisPointInRelation(Point p)
+        {
+            throw new NotImplementedException();
+        }
+
         public float Score()
+        {
+            throw new NotImplementedException();
+        }
+
+        public float ScoreForLine(Line l)
         {
             throw new NotImplementedException();
         }

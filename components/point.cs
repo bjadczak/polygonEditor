@@ -26,6 +26,12 @@ namespace poligonEditor.components
             this.x = x;
             this.y = y;
         }
+        public Point(Point p)
+        {
+            this.InstanceID = Guid.NewGuid();
+            this.x = p.x;
+            this.y = p.y;
+        }
         // Function to draw point on a bitmap
         public void Draw(Bitmap drawArea)
         {
@@ -39,7 +45,7 @@ namespace poligonEditor.components
 
         public void Dispose()
         {
-            //throw new NotImplementedException();
+            
         }
         // Method to recive comparable distance to a second point
         public static double getDistance(components.Point firstPoint, components.Point secondPoint)

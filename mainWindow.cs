@@ -248,6 +248,63 @@ namespace poligonEditor
             else return false;
         }
 
+        private void FixRelationLine(poligonEditor.components.Line l)
+        {
+            const float scoreTolerance = 15f;
+            List<poligonEditor.misc.IRelation> lineRelation = new List<poligonEditor.misc.IRelation>();
+            foreach (poligonEditor.misc.IRelation rel in relations)
+                if (rel.isThisLineInRelation(l)) lineRelation.Add(rel);
+
+            float caluclateScore(int _dx, int _dy, poligonEditor.components.Point Pt1, poligonEditor.components.Point Pt2)
+            {
+                float _score = 0.0f;
+                poligonEditor.components.Point tmpPt2 = new poligonEditor.components.Point(Pt2);
+                tmpPt2.movePointByDelta(_dx, _dy);
+                poligonEditor.components.Line _tmp = new poligonEditor.components.Line(new poligonEditor.components.Point(Pt1), tmpPt2);
+                foreach (poligonEditor.misc.IRelation rel in lineRelation) _score += rel.ScoreForLine(_tmp);
+                return _score;
+            }
+
+            float score = 0.0f;
+            float bestScore = float.MaxValue;
+            int dx = 1, dy = 1;
+
+            for(int i = -1; i<2; i++)
+                for(int j = -1; j<2; j++)
+                {
+                    var tmp = caluclateScore(i, j, l.Pt1, l.Pt2);
+                    if (tmp < bestScore)
+                    {
+                        dx = i;
+                        dy = j;
+                        bestScore = tmp;
+                    }
+                }
+
+            foreach (poligonEditor.misc.IRelation rel in lineRelation) score += rel.Score();
+
+            while (score > scoreTolerance)
+            {
+                score = 0;
+                bestScore = float.MaxValue;
+
+                for (int i = -1; i < 2; i++)
+                    for (int j = -1; j < 2; j++)
+                    {
+                        var tmp = caluclateScore(i, j, l.Pt1, l.Pt2);
+                        if (tmp < bestScore)
+                        {
+                            dx = i;
+                            dy = j;
+                            bestScore = tmp;
+                        }
+                    }
+                l.Pt2.movePointByDelta(dx, dy);
+                foreach (poligonEditor.misc.IRelation rel in lineRelation) score += rel.Score();
+            }
+
+        }
+
         // Adding length relation
         private void addRelationLength(int X, int Y)
         {
@@ -259,6 +316,9 @@ namespace poligonEditor
                 activeLine = null;
                 closest.selected = true;
                 activeLine = closest;
+                // Placeholder value for length
+                relations.Add(new poligonEditor.misc.lengthRelation(closest, 10));
+                FixRelationLine(closest);
                 drawOnPictureBox();
             }
         }
@@ -328,8 +388,20 @@ namespace poligonEditor
             poligonEditor.components.Point tmp = movingPoint;
             movingPoint = new components.Point(e.X, e.Y);
 
-            if (!(holdingPoint is null)) 
+            if (!(holdingPoint is null))
+            {
                 holdingPoint.movePoint(movingPoint);
+                foreach(var rel in relations)
+                {
+                    if (rel.isThisPointInRelation(holdingPoint))
+                    {
+                        foreach(var line in rel.getLinesInRelation())
+                        {
+                            FixRelationLine(line);
+                        }
+                    }
+                }
+            }
             else if (!(holdingLine is null) && !(tmp is null))
             {
                 holdingLine.moveLine(tmp, movingPoint);

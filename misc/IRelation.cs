@@ -9,6 +9,9 @@ namespace poligonEditor.misc
     internal interface IRelation
     {
         float Score();
+        float ScoreForLine(poligonEditor.components.Line l);
         bool isThisLineInRelation(poligonEditor.components.Line l);
+        bool isThisPointInRelation(poligonEditor.components.Point p);
+        IEnumerable<poligonEditor.components.Line> getLinesInRelation();
     }
 }

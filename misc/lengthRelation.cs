@@ -20,6 +20,10 @@ namespace poligonEditor.misc
         {
             return Math.Abs((float)(l.length - this.length));
         }
+        public float ScoreForLine(poligonEditor.components.Line l)
+        {
+            return Math.Abs((float)(l.length - this.length));
+        }
 
         public bool isThisLineInRelation(Line l)
         {
@@ -29,6 +33,16 @@ namespace poligonEditor.misc
         public void Dispose()
         {
             throw new NotImplementedException();
+        }
+
+        public bool isThisPointInRelation(Point p)
+        {
+            return l.Pt1 == p || l.Pt2 == p;
+        }
+
+        public IEnumerable<Line> getLinesInRelation()
+        {
+            yield return this.l;
         }
     }
 }

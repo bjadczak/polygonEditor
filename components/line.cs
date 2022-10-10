@@ -126,7 +126,12 @@ namespace poligonEditor.components
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            b.Dispose();
+            bS.Dispose();
+            d.Dispose();
+            dS.Dispose();
+            Pt1.Dispose();
+            Pt2.Dispose();
         }
 
         // Check if point is on this line
@@ -170,7 +175,7 @@ namespace poligonEditor.components
             Pt2 = newPt2;
         }
 
-        internal class Bresenham : lineDrawing
+        internal class Bresenham : lineDrawing, IDisposable
         {
             private Brush brush;
             public Bresenham(Brush brush)
@@ -222,7 +227,7 @@ namespace poligonEditor.components
                 }
                 
                 int diff = (2 * dy) - dx;
-                components.Point point = new components.Point(point1.x, point1.y);
+                components.Point point = new components.Point(point1);
 
                 for(int i = 0; i<=Math.Abs(dx); i++)
                 {
@@ -256,7 +261,7 @@ namespace poligonEditor.components
                 }
 
                 int diff = (2 * dx) - dy;
-                components.Point point = new components.Point(point1.x, point1.y);
+                components.Point point = new components.Point(point1);
 
                 for (int i = 0; i <= Math.Abs(dy); i++)
                 {
@@ -283,15 +288,25 @@ namespace poligonEditor.components
                     g.FillRectangle(brush, point.x, point.y, 1, 1);
                 }
             }
+
+            public void Dispose()
+            {
+                brush.Dispose();
+            }
         }
 
-        internal class defaultDrawing : lineDrawing
+        internal class defaultDrawing : lineDrawing, IDisposable
         {
             private Pen pen;
 
             public defaultDrawing(Pen pen)
             {
                 this.pen = pen;
+            }
+
+            public void Dispose()
+            {
+                pen.Dispose();
             }
 
             public void draw(Bitmap drawArea, Point point1, Point point2)

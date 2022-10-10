@@ -106,7 +106,7 @@ namespace poligonEditor.components
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            foreach(components.Line l in lines) l.Dispose();
         }
 
         public void DrawIncompleteLine(Bitmap drawArea, components.Point pt)
