@@ -39,6 +39,9 @@
             this.methodOfDrawingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.defaultMethodOfDrawingMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bresenhamsAlgorithmMethodOfDrawingMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addARelationMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addFixedLengthMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.selectParallelLinesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.mainPictureBox)).BeginInit();
             this.contextMenuStrip.SuspendLayout();
             this.SuspendLayout();
@@ -63,9 +66,10 @@
             this.moveAnEdgeMenuItem,
             this.moveAPoligonMenuItem,
             this.deleteAPointMenuItem,
-            this.methodOfDrawingToolStripMenuItem});
+            this.methodOfDrawingToolStripMenuItem,
+            this.addARelationMenuItem});
             this.contextMenuStrip.Name = "contextMenuStrip";
-            this.contextMenuStrip.Size = new System.Drawing.Size(177, 136);
+            this.contextMenuStrip.Size = new System.Drawing.Size(181, 180);
             // 
             // addAPointMenuItem
             // 
@@ -129,6 +133,29 @@
             this.bresenhamsAlgorithmMethodOfDrawingMenuItem.Text = "Bresenham\'s Algorithm";
             this.bresenhamsAlgorithmMethodOfDrawingMenuItem.Click += new System.EventHandler(this.bresenhamsAlgorithmMethodOfDrawingMenuItem_Click);
             // 
+            // addARelationMenuItem
+            // 
+            this.addARelationMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addFixedLengthMenuItem,
+            this.selectParallelLinesMenuItem});
+            this.addARelationMenuItem.Name = "addARelationMenuItem";
+            this.addARelationMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.addARelationMenuItem.Text = "Add a relation";
+            // 
+            // addFixedLengthMenuItem
+            // 
+            this.addFixedLengthMenuItem.Name = "addFixedLengthMenuItem";
+            this.addFixedLengthMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.addFixedLengthMenuItem.Text = "Add fixed length";
+            this.addFixedLengthMenuItem.Click += new System.EventHandler(this.addFixedLengthMenuItem_Click);
+            // 
+            // selectParallelLinesMenuItem
+            // 
+            this.selectParallelLinesMenuItem.Name = "selectParallelLinesMenuItem";
+            this.selectParallelLinesMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.selectParallelLinesMenuItem.Text = "Select parallel lines";
+            this.selectParallelLinesMenuItem.Click += new System.EventHandler(this.selectParallelLinesMenuItem_Click);
+            // 
             // mainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -156,6 +183,9 @@
         private System.Windows.Forms.ToolStripMenuItem methodOfDrawingToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem defaultMethodOfDrawingMenuItem;
         private System.Windows.Forms.ToolStripMenuItem bresenhamsAlgorithmMethodOfDrawingMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addARelationMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addFixedLengthMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem selectParallelLinesMenuItem;
     }
 }
 

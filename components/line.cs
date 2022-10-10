@@ -23,9 +23,16 @@ namespace poligonEditor.components
         // Method of drawing lines
         public static bool useBresenhams = false;
 
+        // If line is selected
+        public bool selected = false;
+
         // Create drawing mechanisms
         Bresenham b = new Bresenham((Brush)Brushes.Black);
         defaultDrawing d = new defaultDrawing(new Pen(Color.Black, width));
+
+        // Create drawing mechanisms for being selected
+        Bresenham bS = new Bresenham((Brush)Brushes.Blue);
+        defaultDrawing dS = new defaultDrawing(new Pen(Color.Blue, width*2));
 
         // Information for seting two lines as parrallel
         public double atan 
@@ -91,16 +98,31 @@ namespace poligonEditor.components
         public void Draw(Bitmap drawArea)
         {
             if (Pt1 is null || Pt2 is null) throw new InvalidOperationException("Cannot draw lines without both points");
+
+            if (selected) DrawSelected(drawArea);
+            else DrawUnselected(drawArea);
             
-            lineDrawing drawing = useBresenhams ? (lineDrawing)b: (lineDrawing)d;
-
-
-            drawing.draw(drawArea, Pt1, Pt2);
             Pt1.Draw(drawArea);
             Pt2.Draw(drawArea);
         }
 
-        
+        // Draw lines that are selected to be in relation
+        public void DrawSelected(Bitmap drawArea)
+        {
+            lineDrawing drawing = useBresenhams ? (lineDrawing)bS : (lineDrawing)dS;
+
+
+            drawing.draw(drawArea, Pt1, Pt2);
+        }
+        public void DrawUnselected(Bitmap drawArea)
+        {
+            lineDrawing drawing = useBresenhams ? (lineDrawing)b : (lineDrawing)d;
+
+
+            drawing.draw(drawArea, Pt1, Pt2);
+        }
+
+
 
         public void Dispose()
         {

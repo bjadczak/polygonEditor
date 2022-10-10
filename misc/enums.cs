@@ -15,6 +15,8 @@ namespace poligonEditor.misc
             movingEdge,
             movingPoligon,
             deletingPoint,
+            addingRelationLength,
+            addingRelationParallel,
         }
     }
 }
