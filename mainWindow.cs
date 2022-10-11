@@ -260,9 +260,14 @@ namespace poligonEditor
                 activeLine = null;
                 closest.selected = true;
                 // activeLine = closest;
-                string ret = poligonEditor.misc.inputDialog.ShowDialog("GIV ME NUMBER", "NUMBER");
+                int ret = poligonEditor.misc.inputDialog.ShowDialog("Fixed length relation", "Please input desired length", closest.displayLength);
                 // Placeholder value for length
-                relations.Add(new poligonEditor.misc.lengthRelation(closest, 50));
+                if (ret <= 0)
+                {
+                    closest.selected = false;
+                    return;
+                }
+                relations.Add(new poligonEditor.misc.lengthRelation(closest, ret));
                 foreach (var p in poli)
                 {
                     if (p.containsLine(closest))

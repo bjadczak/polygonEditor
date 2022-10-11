@@ -277,7 +277,7 @@ namespace poligonEditor.components
             //if (!this.containsPoint(movingPoint)) movingPoint = lines[0].Pt1;
             Line activeLine = this.getLinesWithPoint(movingPoint).First();
             // We fix all lines that have relations
-            const float threshold = 20.0f;
+            const float threshold = 1.0f;
             float score = 0;
             foreach (var rel in poligonRelations) score += rel.Score();
             float prevScore = float.MaxValue;

@@ -326,7 +326,7 @@ namespace poligonEditor.components
         {
             float score = float.MaxValue - 1, bestScore;
             int dx = 0 , dy = 0;
-            const float threashold = 50f;
+            const float threashold = 1f;
 
             float getScorePartial()
             {
