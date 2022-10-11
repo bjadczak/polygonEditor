@@ -14,6 +14,11 @@ namespace poligonEditor.misc
             throw new NotImplementedException();
         }
 
+        public void Fix(Line l, components.Point movingPoint)
+        {
+            l.fixForAngle(this, movingPoint);
+        }
+
         public IEnumerable<Line> getLinesInRelation()
         {
             throw new NotImplementedException();

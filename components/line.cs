@@ -320,6 +320,43 @@ namespace poligonEditor.components
             }
         }
 
+        public void fixForLength(lengthRelation relation, components.Point movingPoint)
+        {
+            float score = float.MaxValue - 1, bestScore;
+            int dx = 0 , dy = 0;
+            const float threashold = 20f;
+            while (score > threashold)
+            {
+                bestScore = float.MaxValue;
+                for (int i = -1; i < 2; i++)
+                    for (int j = -1; j < 2; j++)
+                    {
+                        var tmp = relation.ScoreWithChange(i, j, movingPoint);
+                        if (tmp < bestScore)
+                        {
+                            dx = i;
+                            dy = j;
+                            bestScore = tmp;
+                        }
+                    }
+                if(bestScore < float.MaxValue && bestScore < score)
+                {
+                    relation.moveByChange(dx, dy, movingPoint);
+                }
+                else
+                {
+                    break;
+                }
+                score = bestScore;
+                
+            }
+            return;
+        }
+        public void fixForAngle(angleRelation relation, components.Point movingPoint)
+        {
+
+        }
+
     }
     interface lineDrawing
     {

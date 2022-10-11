@@ -182,7 +182,47 @@ namespace poligonEditor.components
             l1.setPt2(l2.Pt2);
             lines.Remove(l2);
         }
-        
+
+        public void fixPoligon(components.Point movingPoint, IEnumerable<poligonEditor.misc.IRelation> relations)
+        {
+            // Find all relations that we care of in this poligon
+            List<poligonEditor.misc.IRelation> poligonRelations = new List<poligonEditor.misc.IRelation>();
+            foreach(var line in lines)
+            {
+                foreach (var rel in relations)
+                {
+                    if (rel.isThisLineInRelation(line) && !poligonRelations.Contains(rel)) poligonRelations.Add(rel);
+                }
+            }
+
+            // We fix all lines that have relations
+            const float threshold = 20.0f;
+            float score = 0;
+            foreach (var rel in poligonRelations) score += rel.Score();
+            float prevScore = float.MaxValue;
+            while (score > threshold && prevScore > score)
+            {
+                prevScore = score;
+                score = 0;
+                foreach(var rel in poligonRelations)
+                {
+                    foreach(var line in lines)
+                    {
+                        if (rel.isThisLineInRelation(line))
+                        {
+                            rel.Fix(line, movingPoint);
+                            break;
+                        }
+                    }
+                }
+                foreach (var rel in poligonRelations) score += rel.Score();
+                
+                // We do this until we get better score that threashold or until we are making it worst
+            }
+
+
+        }
+
     }
 
 }

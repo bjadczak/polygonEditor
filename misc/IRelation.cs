@@ -13,6 +13,7 @@ namespace poligonEditor.misc
         float ScoreWithChange(int dx, int dy, poligonEditor.components.Point movingPoint);
         bool isThisLineInRelation(poligonEditor.components.Line l);
         bool isThisPointInRelation(poligonEditor.components.Point p);
+        void Fix(poligonEditor.components.Line l, components.Point movingPoint);
 
     }
 }

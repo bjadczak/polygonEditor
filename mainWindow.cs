@@ -263,7 +263,14 @@ namespace poligonEditor
                 string ret = poligonEditor.misc.inputDialog.ShowDialog("GIV ME NUMBER", "NUMBER");
                 // Placeholder value for length
                 relations.Add(new poligonEditor.misc.lengthRelation(closest, 50));
-                //fixRelations(closest, closest.Pt1);
+                foreach (var p in poli)
+                {
+                    if (p.containsLine(closest))
+                    {
+                        p.fixPoligon(closest.Pt1, relations);
+                        break;
+                    }
+                }
                 drawOnPictureBox();
             }
         }
@@ -336,6 +343,10 @@ namespace poligonEditor
             if (!(holdingPoint is null))
             {
                 holdingPoint.movePoint(movingPoint);
+                foreach(var p in poli)
+                {
+                    if (p.containsPoint(holdingPoint)) p.fixPoligon(holdingPoint, relations);
+                }
             }
             else if (!(holdingLine is null) && !(tmp is null))
             {
