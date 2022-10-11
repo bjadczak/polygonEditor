@@ -274,7 +274,6 @@ namespace poligonEditor.components
                     if (rel.isThisLineInRelation(line) && !poligonRelations.Contains(rel)) poligonRelations.Add(rel);
                 }
             }
-            //if (!this.containsPoint(movingPoint)) movingPoint = lines[0].Pt1;
             Line activeLine = this.getLinesWithPoint(movingPoint).First();
             // We fix all lines that have relations
             const float threshold = 1.0f;

@@ -212,11 +212,27 @@ namespace poligonEditor
                         if(p.Count <= 2)
                         {
                             poli.Remove(p);
+                            for (int i = 0; i < relations.Count; i++)
+                            {
+                                if (relations[i].isThisPointInRelation(closest))
+                                {
+                                    relations.Remove(relations[i]);
+                                    i--;
+                                }
+                            }
                             return;
                         }
                         else
                         {
                             p.deletePoint(closest);
+                            for (int i = 0; i < relations.Count; i++)
+                            {
+                                if (relations[i].isThisPointInRelation(closest))
+                                {
+                                    relations.Remove(relations[i]);
+                                    i--;
+                                }
+                            }
                             return;
                         }
                     }
@@ -259,14 +275,14 @@ namespace poligonEditor
                 if (!(activeLine is null)) activeLine.selected = false;
                 activeLine = null;
                 closest.selected = true;
-                // activeLine = closest;
+                drawOnPictureBox();
                 int ret = poligonEditor.misc.inputDialog.ShowDialog("Fixed length relation", "Please input desired length", closest.displayLength);
-                // Placeholder value for length
                 if (ret <= 0)
                 {
                     closest.selected = false;
                     return;
                 }
+                closest.selected = false;
                 relations.Add(new poligonEditor.misc.lengthRelation(closest, ret));
                 foreach (var p in poli)
                 {
@@ -276,6 +292,7 @@ namespace poligonEditor
                         break;
                     }
                 }
+
                 drawOnPictureBox();
             }
         }
@@ -356,6 +373,11 @@ namespace poligonEditor
             else if (!(holdingLine is null) && !(tmp is null))
             {
                 holdingLine.moveLine(tmp, movingPoint);
+                foreach (var p in poli)
+                {
+                    if (p.containsPoint(holdingLine.Pt1)) p.fixPoligon(holdingLine.Pt1, relations);
+                    if (p.containsPoint(holdingLine.Pt2)) p.fixPoligon(holdingLine.Pt2, relations);
+                }
             }
             else if (!(holdingPoligon is null) && !(tmp is null))
             {
