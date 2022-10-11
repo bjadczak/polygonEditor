@@ -297,6 +297,39 @@ namespace poligonEditor
             }
         }
 
+        // Adding parallel relation
+        private void addRelationParalell(int X, int Y)
+        {
+            components.Point actPoint = new components.Point(X, Y);
+            poligonEditor.components.Line closest = poligonEditor.components.Line.findFirstOnLine(poligonEditor.components.Poligon.GetLinesFrom(poli), actPoint);
+
+            // Check if it is a second sine selected
+            if (activeLine is null)
+            {
+                if (!(closest is null))
+                {
+                    closest.selected = true;
+                    activeLine = closest;
+                    drawOnPictureBox();
+                }
+            }
+            else
+            {
+                if (!(closest is null))
+                {
+                    if (closest.Pt1 == activeLine.Pt1 || closest.Pt1 == activeLine.Pt2 || closest.Pt2 == activeLine.Pt1 || closest.Pt2 == activeLine.Pt2) return;
+                    closest.selected = true;
+                    drawOnPictureBox();
+
+                    // Add paralell relation
+
+                    activeLine.selected = closest.selected = false;
+                    activeLine = null;
+                    drawOnPictureBox();
+                }
+            }
+        }
+
         private void clickOnPictureBox(object sender, MouseEventArgs e)
         {
             // Deside which button was pressed
@@ -333,6 +366,11 @@ namespace poligonEditor
                         case misc.enums.mode.addingRelationLength:
                             {
                                 addRelationLength(e.X, e.Y);
+                            }
+                            break;
+                        case misc.enums.mode.addingRelationParallel:
+                            {
+                                addRelationParalell(e.X, e.Y);
                             }
                             break;
                         default:
@@ -473,12 +511,6 @@ namespace poligonEditor
             addARelationMenuItem.Checked = true;
             selectParallelLinesMenuItem.Checked = true;
             activeMode = misc.enums.mode.addingRelationParallel;
-        }
-
-        private void fixRelations(poligonEditor.components.Line l, poligonEditor.components.Point movingPoint)
-        {
-            
-
         }
 
     }
