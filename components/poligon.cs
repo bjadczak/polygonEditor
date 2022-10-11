@@ -181,8 +181,6 @@ namespace poligonEditor.components
             if (point == startingPoint) startingPoint = finishingPoint = l1.Pt1;
             l1.setPt2(l2.Pt2);
             lines.Remove(l2);
-
-
         }
         
     }

@@ -10,9 +10,9 @@ namespace poligonEditor.misc
     {
         float Score();
         float ScoreForLine(poligonEditor.components.Line l);
+        float ScoreWithChange(int dx, int dy, poligonEditor.components.Point movingPoint);
         bool isThisLineInRelation(poligonEditor.components.Line l);
         bool isThisPointInRelation(poligonEditor.components.Point p);
-        IEnumerable<poligonEditor.components.Line> getLinesInRelation();
 
     }
 }

@@ -29,6 +29,11 @@ namespace poligonEditor.misc
             throw new NotImplementedException();
         }
 
+        public void moveByChange(int dx, int dy, Point movingPoint)
+        {
+            throw new NotImplementedException();
+        }
+
         public float Score()
         {
             throw new NotImplementedException();
@@ -39,5 +44,9 @@ namespace poligonEditor.misc
             throw new NotImplementedException();
         }
 
+        public float ScoreWithChange(int dx, int dy, poligonEditor.components.Point movingPoint)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

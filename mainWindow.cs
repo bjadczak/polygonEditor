@@ -259,11 +259,11 @@ namespace poligonEditor
                 if (!(activeLine is null)) activeLine.selected = false;
                 activeLine = null;
                 closest.selected = true;
-                activeLine = closest;
+                // activeLine = closest;
                 string ret = poligonEditor.misc.inputDialog.ShowDialog("GIV ME NUMBER", "NUMBER");
                 // Placeholder value for length
                 relations.Add(new poligonEditor.misc.lengthRelation(closest, 50));
-                //closest.fixForPoint(closest.Pt1);
+                //fixRelations(closest, closest.Pt1);
                 drawOnPictureBox();
             }
         }
@@ -437,79 +437,9 @@ namespace poligonEditor
             activeMode = misc.enums.mode.addingRelationParallel;
         }
 
-        private void fixRelations(poligonEditor.components.Point p)
+        private void fixRelations(poligonEditor.components.Line l, poligonEditor.components.Point movingPoint)
         {
-            if (relations.Count <= 0) return;
-
-            const float scoreTolerance = 20f;
-
-            float caluclateScore(int _dx, int _dy, poligonEditor.components.Point Pt1, poligonEditor.components.Point Pt2, poligonEditor.components.Line checkedLine)
-            {
-                float _score = 0.0f;
-                poligonEditor.components.Line _tmp;
-                if (checkedLine.Pt1 == p)
-                {
-                    poligonEditor.components.Point tmpPt2 = new poligonEditor.components.Point(Pt2);
-                    tmpPt2.movePointByDelta(_dx, _dy);
-                    _tmp = new poligonEditor.components.Line(new poligonEditor.components.Point(Pt1), tmpPt2);
-                }
-                else
-                {
-                    poligonEditor.components.Point tmpPt1 = new poligonEditor.components.Point(Pt1);
-                    tmpPt1.movePointByDelta(_dx, _dy);
-                    _tmp = new poligonEditor.components.Line(tmpPt1, new poligonEditor.components.Point(Pt2));
-                }
-                foreach (poligonEditor.misc.IRelation rel in relations) _score += rel.ScoreForLine(_tmp);
-                return _score;
-            }
-
-            float score = 0.0f;
-            float bestScore = float.MaxValue;
-            int dx = 1, dy = 1;
-            poligonEditor.components.Line fixingLine = null;
-            foreach(var l in poligonEditor.components.Poligon.GetLinesFrom(poli))
-                for (int i = -1; i < 2; i++)
-                    for (int j = -1; j < 2; j++)
-                    {
-                        var tmp = caluclateScore(i, j, l.Pt1, l.Pt2, l);
-                        if (tmp < bestScore)
-                        {
-                            dx = i;
-                            dy = j;
-                            bestScore = tmp;
-                            fixingLine = l;
-                        }
-                    }
-
-            foreach (poligonEditor.misc.IRelation rel in relations) score += rel.Score();
-
-            while (score > scoreTolerance)
-            {
-                score = 0;
-                bestScore = float.MaxValue;
-                fixingLine = null;
-
-                foreach (var l in poligonEditor.components.Poligon.GetLinesFrom(poli))
-                    for (int i = -1; i < 2; i++)
-                        for (int j = -1; j < 2; j++)
-                        {
-                            var tmp = caluclateScore(i, j, l.Pt1, l.Pt2, l);
-                            if (tmp < bestScore)
-                            {
-                                dx = i;
-                                dy = j;
-                                bestScore = tmp;
-                                fixingLine = l;
-                            }
-                        }
-                if(!(fixingLine is null))
-                    if (fixingLine.Pt1 == p)
-                        fixingLine.Pt2.movePointByDelta(dx, dy);
-                    else
-                        fixingLine.Pt1.movePointByDelta(dx, dy);
-
-                foreach (poligonEditor.misc.IRelation rel in relations) score += rel.Score();
-            }
+            
 
         }
 

@@ -64,22 +64,22 @@ namespace poligonEditor.components
             g.FillEllipse((Brush)Brushes.DarkCyan, x - pointSize/2, y - pointSize/2, pointSize, pointSize);
         }
 
-        public void movePoint(float x, float y, IEnumerable<poligonEditor.misc.IRelation> relations = null)
+        public void movePoint(float x, float y)
         {
             this.x = x;
             this.y = y;
         }
-        public void movePointByDelta(float x, float y, IEnumerable<poligonEditor.misc.IRelation> relations = null)
+        public void movePointByDelta(float x, float y)
         {
             this.x += x;
             this.y += y;
         }
-        public void movePointByDelta(components.Point p, IEnumerable<poligonEditor.misc.IRelation> relations = null)
+        public void movePointByDelta(components.Point p)
         {
             this.x += p.x;
             this.y += p.y;
         }
-        public void movePoint(components.Point p, IEnumerable<poligonEditor.misc.IRelation> relations = null)
+        public void movePoint(components.Point p)
         {
             this.x = p.x;
             this.y = p.y;
