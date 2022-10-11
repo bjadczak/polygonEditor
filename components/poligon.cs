@@ -160,6 +160,15 @@ namespace poligonEditor.components
             return false;
         }
 
+        public IEnumerable<poligonEditor.components.Line> getLinesWithPoint(components.Point point)
+        {
+            foreach (var l in lines)
+            {
+                if (l.Pt1 == point) yield return l;
+                if (l.Pt2 == point) yield return l;
+            }
+        }
+
         public void movePoligon(poligonEditor.components.Point firstPoint, poligonEditor.components.Point secondPoint)
         {
             foreach(var p in GetPoints())
@@ -183,6 +192,77 @@ namespace poligonEditor.components
             lines.Remove(l2);
         }
 
+        public IEnumerable<poligonEditor.components.Line> GetLinesFromLine(poligonEditor.components.Line l)
+        {
+            bool[] visited = new bool[lines.Count];
+            for (int i = 0; i < visited.Length; i++) visited[i] = false;
+            //int count = visited.Length;
+
+            bool isVisited(Line lookedAt)
+            {
+                bool isLine(Line lin)
+                {
+                    return lin == lookedAt;
+                }
+
+                int idx = lines.FindIndex(isLine);
+
+                return visited[idx];
+
+            }
+            void setVisited(Line lookedAt)
+            {
+                bool isLine(Line lin)
+                {
+                    return lin == lookedAt;
+                }
+
+                int idx = lines.FindIndex(isLine);
+
+                visited[idx] = true;
+
+            }
+
+
+
+            Stack<poligonEditor.components.Line> S = new Stack<Line>();
+
+            S.Push(l);
+            setVisited(l);
+
+            while (S.Count > 0)
+            {
+                poligonEditor.components.Line tmp = S.Pop();
+                yield return tmp;
+
+
+                
+                
+
+                foreach(var lines in this.getLinesWithPoint(tmp.Pt1))
+                {
+                    if (!isVisited(lines))
+                    {
+                        setVisited(lines);
+                        S.Push(lines);
+                    }
+                }
+                foreach (var lines in this.getLinesWithPoint(tmp.Pt2))
+                {
+                    if (!isVisited(lines))
+                    {
+                        setVisited(lines);
+                        S.Push(lines);
+                    }
+                }
+
+
+            }
+
+            
+
+        }
+
         public void fixPoligon(components.Point movingPoint, IEnumerable<poligonEditor.misc.IRelation> relations)
         {
             // Find all relations that we care of in this poligon
@@ -194,25 +274,29 @@ namespace poligonEditor.components
                     if (rel.isThisLineInRelation(line) && !poligonRelations.Contains(rel)) poligonRelations.Add(rel);
                 }
             }
-
+            //if (!this.containsPoint(movingPoint)) movingPoint = lines[0].Pt1;
+            Line activeLine = this.getLinesWithPoint(movingPoint).First();
             // We fix all lines that have relations
             const float threshold = 20.0f;
             float score = 0;
             foreach (var rel in poligonRelations) score += rel.Score();
             float prevScore = float.MaxValue;
+            var startPoint = movingPoint;
             while (score > threshold && prevScore > score)
             {
                 prevScore = score;
                 score = 0;
+                //movingPoint = startPoint;
                 foreach(var rel in poligonRelations)
                 {
-                    foreach(var line in lines)
+                    foreach(var line in GetLinesFromLine(activeLine))
                     {
                         if (rel.isThisLineInRelation(line))
                         {
-                            rel.Fix(line, movingPoint);
+                            rel.Fix(line, line.Pt2 == movingPoint ? line.Pt1 : line.Pt2, poligonRelations);
                             break;
                         }
+                        
                     }
                 }
                 foreach (var rel in poligonRelations) score += rel.Score();

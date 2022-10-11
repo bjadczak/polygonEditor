@@ -61,11 +61,11 @@ namespace poligonEditor.misc
         public float ScoreWithChange(int dx, int dy, poligonEditor.components.Point movingPoint)
         {
             // We check if movingPoint is on line if so, choose other
-            if(l.Pt1 == movingPoint)
+            if (l.Pt1 == movingPoint)
             {
                 return this.scoreWithDelta(this.l, 0, 0, dx, dy);
             }
-            else if(l.Pt2 == movingPoint)
+            else if (l.Pt2 == movingPoint)
             {
                 return this.scoreWithDelta(this.l, dx, dy, 0, 0);
             }
@@ -90,16 +90,16 @@ namespace poligonEditor.misc
             }
             else
             {
-                 var scorePt1 = this.scoreWithDelta(this.l, dx, dy, 0, 0);
-                 var scorePt2 = this.scoreWithDelta(this.l, 0, 0, dx, dy);
-                 if (scorePt1 > scorePt2) l.Pt2.movePointByDelta(dx, dy);
-                 else l.Pt1.movePointByDelta(dx, dy);
+                var scorePt1 = this.scoreWithDelta(this.l, dx, dy, 0, 0);
+                var scorePt2 = this.scoreWithDelta(this.l, 0, 0, dx, dy);
+                if (scorePt1 > scorePt2) l.Pt2.movePointByDelta(dx, dy);
+                else l.Pt1.movePointByDelta(dx, dy);
             }
         }
 
-        public void Fix(Line l, components.Point movingPoint)
+        public void Fix(Line l, components.Point movingPoint, IEnumerable<IRelation> relations)
         {
-            l.fixForLength(this, movingPoint);
+            l.fixForLength(this, movingPoint, relations);
         }
     }
 }

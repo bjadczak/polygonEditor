@@ -267,7 +267,7 @@ namespace poligonEditor
                 {
                     if (p.containsLine(closest))
                     {
-                        p.fixPoligon(closest.Pt1, relations);
+                        p.fixPoligon(closest.Pt2, relations);
                         break;
                     }
                 }

@@ -18,6 +18,9 @@ namespace poligonEditor.components
         public float x { get; private set; }
         public float y { get; private set; }
 
+        public Line first;
+        public Line second;
+
         // Size of displayed point
         const int pointSize = 8;
 

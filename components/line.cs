@@ -81,6 +81,7 @@ namespace poligonEditor.components
             InstanceID = Guid.NewGuid();
             Pt1 = pt1;
             Pt2 = null;
+            Pt1.first = this;
         }
         public Line()
         {
@@ -93,6 +94,7 @@ namespace poligonEditor.components
             if (isLineComplet) throw new InvalidOperationException("Trying to use method in instance that already has 2 points");
 
             Pt2 = pt2;
+            pt2.second = this;
 
         }
 
@@ -320,18 +322,27 @@ namespace poligonEditor.components
             }
         }
 
-        public void fixForLength(lengthRelation relation, components.Point movingPoint)
+        public void fixForLength(lengthRelation relation, components.Point movingPoint, IEnumerable<IRelation> relations)
         {
             float score = float.MaxValue - 1, bestScore;
             int dx = 0 , dy = 0;
-            const float threashold = 20f;
+            const float threashold = 50f;
+
+            float getScorePartial()
+            {
+                float scorePartial = 0;
+                foreach (var rel in relations) if(rel != relation) scorePartial += rel.Score();
+                return scorePartial;
+            }
+
             while (score > threashold)
             {
                 bestScore = float.MaxValue;
-                for (int i = -1; i < 2; i++)
-                    for (int j = -1; j < 2; j++)
+
+                for (int i = 1; i >= -1; i--)
+                    for (int j = 1; j >= -1; j--)
                     {
-                        var tmp = relation.ScoreWithChange(i, j, movingPoint);
+                        var tmp = relation.ScoreWithChange(i, j, movingPoint) + getScorePartial();
                         if (tmp < bestScore)
                         {
                             dx = i;
