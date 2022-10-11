@@ -1,4 +1,5 @@
 ﻿using poligonEditor.components;
+using poligonEditor.misc;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -298,7 +299,7 @@ namespace poligonEditor
         }
 
         // Adding parallel relation
-        private void addRelationParalell(int X, int Y)
+        private void addRelationParallel(int X, int Y)
         {
             components.Point actPoint = new components.Point(X, Y);
             poligonEditor.components.Line closest = poligonEditor.components.Line.findFirstOnLine(poligonEditor.components.Poligon.GetLinesFrom(poli), actPoint);
@@ -322,6 +323,16 @@ namespace poligonEditor
                     drawOnPictureBox();
 
                     // Add paralell relation
+                    relations.Add(new angleRelation(activeLine, closest));
+
+                    foreach (var p in poli)
+                    {
+                        if (p.containsLine(closest))
+                        {
+                            p.fixPoligon(closest.Pt2, relations);
+                            break;
+                        }
+                    }
 
                     activeLine.selected = closest.selected = false;
                     activeLine = null;
@@ -370,7 +381,7 @@ namespace poligonEditor
                             break;
                         case misc.enums.mode.addingRelationParallel:
                             {
-                                addRelationParalell(e.X, e.Y);
+                                addRelationParallel(e.X, e.Y);
                             }
                             break;
                         default:

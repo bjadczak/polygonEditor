@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -41,7 +42,7 @@ namespace poligonEditor.components
             get
             {
                 if (Pt1 is null || Pt2 is null) throw new InvalidOperationException("Cannot get angle of unfined line");
-                return Math.Atan((Pt2.y - Pt1.y) / (Pt2.x / Pt1.x));
+                return Math.Atan((Pt2.y - Pt1.y) / (Pt2.x - Pt1.x));
             } 
         }
 
@@ -361,11 +362,46 @@ namespace poligonEditor.components
                 score = bestScore;
                 
             }
-            return;
         }
-        public void fixForAngle(angleRelation relation, components.Point movingPoint)
+        public void fixForAngle(angleRelation relation, components.Point movingPoint, IEnumerable<IRelation> relations)
         {
+            float score = float.MaxValue - 1, bestScore;
+            int dx = 0, dy = 0;
+            const float threashold = 1f;
 
+            float getScorePartial()
+            {
+                float scorePartial = 0;
+                foreach (var rel in relations) if (rel != relation) scorePartial += rel.Score();
+                return scorePartial;
+            }
+
+            while (score > threashold)
+            {
+                bestScore = float.MaxValue;
+
+                for (int i = 1; i >= -1; i--)
+                    for (int j = 1; j >= -1; j--)
+                    {
+                        var tmp = relation.ScoreWithChanges(i, j, this == relation.l1 ? relation.l2 : relation.l1) + getScorePartial();
+                        if (tmp < bestScore)
+                        {
+                            dx = i;
+                            dy = j;
+                            bestScore = tmp;
+                        }
+                    }
+                if (bestScore < float.MaxValue && bestScore < score)
+                {
+                    relation.moveByChange(dx, dy, this == relation.l1 ? relation.l2 : relation.l1);
+                }
+                else
+                {
+                    break;
+                }
+                score = bestScore;
+
+            }
         }
 
     }
