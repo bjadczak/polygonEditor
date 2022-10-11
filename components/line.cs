@@ -1,4 +1,5 @@
-﻿using System;
+﻿using poligonEditor.misc;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -160,7 +161,7 @@ namespace poligonEditor.components
             return null;
         }
 
-        public void moveLine(poligonEditor.components.Point firstPoint, poligonEditor.components.Point secondPoint)
+        public void moveLine(poligonEditor.components.Point firstPoint, poligonEditor.components.Point secondPoint, IEnumerable<poligonEditor.misc.IRelation> relations = null)
         {
             Pt1.movePointByDelta(secondPoint.x - firstPoint.x, secondPoint.y - firstPoint.y);
             Pt2.movePointByDelta(secondPoint.x - firstPoint.x, secondPoint.y - firstPoint.y);
@@ -174,6 +175,7 @@ namespace poligonEditor.components
         {
             Pt2 = newPt2;
         }
+
 
         internal class Bresenham : lineDrawing, IDisposable
         {

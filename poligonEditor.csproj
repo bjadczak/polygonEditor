@@ -57,6 +57,7 @@
     </Compile>
     <Compile Include="misc\angleRelation.cs" />
     <Compile Include="misc\enums.cs" />
+    <Compile Include="misc\inputDialog.cs" />
     <Compile Include="misc\lengthRelation.cs" />
     <Compile Include="misc\IRelation.cs" />
     <Compile Include="Program.cs" />

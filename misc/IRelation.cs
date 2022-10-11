@@ -13,5 +13,6 @@ namespace poligonEditor.misc
         bool isThisLineInRelation(poligonEditor.components.Line l);
         bool isThisPointInRelation(poligonEditor.components.Point p);
         IEnumerable<poligonEditor.components.Line> getLinesInRelation();
+
     }
 }

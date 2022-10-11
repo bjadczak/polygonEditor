@@ -1,4 +1,5 @@
-﻿using System;
+﻿using poligonEditor.misc;
+using System;
 using System.CodeDom;
 using System.Collections.Generic;
 using System.Drawing;
@@ -63,22 +64,22 @@ namespace poligonEditor.components
             g.FillEllipse((Brush)Brushes.DarkCyan, x - pointSize/2, y - pointSize/2, pointSize, pointSize);
         }
 
-        public void movePoint(float x, float y)
+        public void movePoint(float x, float y, IEnumerable<poligonEditor.misc.IRelation> relations = null)
         {
             this.x = x;
             this.y = y;
         }
-        public void movePointByDelta(float x, float y)
+        public void movePointByDelta(float x, float y, IEnumerable<poligonEditor.misc.IRelation> relations = null)
         {
             this.x += x;
             this.y += y;
         }
-        public void movePointByDelta(components.Point p)
+        public void movePointByDelta(components.Point p, IEnumerable<poligonEditor.misc.IRelation> relations = null)
         {
             this.x += p.x;
             this.y += p.y;
         }
-        public void movePoint(components.Point p)
+        public void movePoint(components.Point p, IEnumerable<poligonEditor.misc.IRelation> relations = null)
         {
             this.x = p.x;
             this.y = p.y;
