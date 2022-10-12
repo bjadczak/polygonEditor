@@ -1,4 +1,4 @@
-﻿using poligonEditor.misc;
+﻿using polygonEditor.misc;
 using System;
 using System.CodeDom;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace poligonEditor.components
+namespace polygonEditor.components
 {
     internal class Point : IDisposable
     {

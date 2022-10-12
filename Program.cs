@@ -4,12 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace poligonEditor
+namespace polygonEditor
 {
     internal static class Program
     {
         /// <summary>
-        /// Główny punkt wejścia dla aplikacji.
+        /// Main entry point to the application.
         /// </summary>
         [STAThread]
         static void Main()

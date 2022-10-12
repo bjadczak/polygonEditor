@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolTip;
 
-namespace poligonEditor.components
+namespace polygonEditor.components
 {
-    internal class Poligon : IDisposable
+    internal class Polygon : IDisposable
     {
         // Implementing Global Unique ID might be helpful in the future
         public Guid InstanceID { get; private set; }
@@ -27,14 +27,14 @@ namespace poligonEditor.components
         public int Count { get => lines.Count; }
 
         // Constructor for empty poligon and one with only one point (startingPoint)
-        public Poligon()
+        public Polygon()
         {
             lines = new List<components.Line>();
             InstanceID = Guid.NewGuid();
             startingPoint = null;
             finishingPoint = null;
         }
-        public Poligon(components.Point startingPoint)
+        public Polygon(components.Point startingPoint)
         {
             lines = new List<components.Line>();
             InstanceID = Guid.NewGuid();
@@ -46,15 +46,15 @@ namespace poligonEditor.components
         // We build our poligon by those two methods, adding points on the way
         public void addFirstPoint(components.Point pt)
         {
-            if (isPoligonComplet()) throw new InvalidOperationException("Poligon already complet");
-            if ((startingPoint is null)) throw new InvalidOperationException("Poligon already has starting point");
+            if (isPoligonComplet()) throw new InvalidOperationException("Polygon already complet");
+            if ((startingPoint is null)) throw new InvalidOperationException("Polygon already has starting point");
 
             startingPoint = finishingPoint = pt;
         }
 
         public bool addNewPoint(components.Point pt, IEnumerable<components.Point> allPoints)
         {
-            if (isPoligonComplet()) throw new InvalidOperationException("Poligon already complet");
+            if (isPoligonComplet()) throw new InvalidOperationException("Polygon already complet");
 
             using (var tmp = checkOverallping(pt, allPoints))
             {
@@ -116,35 +116,35 @@ namespace poligonEditor.components
                 g.DrawLine(grayPen, (System.Drawing.Point)finishingPoint, (System.Drawing.Point)pt);
             }
         }
-        public IEnumerable<poligonEditor.components.Line> GetLines()
+        public IEnumerable<polygonEditor.components.Line> GetLines()
         {
             foreach (components.Line l in lines)
             {
                 yield return l;
             }
         }
-        public static IEnumerable<poligonEditor.components.Line> GetLinesFrom(IEnumerable<poligonEditor.components.Poligon> poligons)
+        public static IEnumerable<polygonEditor.components.Line> GetLinesFrom(IEnumerable<polygonEditor.components.Polygon> poligons)
         {
-            foreach(components.Poligon p in poligons)
+            foreach(components.Polygon p in poligons)
             {
-                foreach(poligonEditor.components.Line l in p.GetLines())
+                foreach(polygonEditor.components.Line l in p.GetLines())
                 {
                     yield return l;
                 }
             }
         }
-        public IEnumerable<poligonEditor.components.Point> GetPoints()
+        public IEnumerable<polygonEditor.components.Point> GetPoints()
         {
             foreach (components.Line l in lines)
             {
                 yield return l.Pt1;
             }
         }
-        public static IEnumerable<poligonEditor.components.Point> GetPointsFrom(IEnumerable<poligonEditor.components.Poligon> poligons)
+        public static IEnumerable<polygonEditor.components.Point> GetPointsFrom(IEnumerable<polygonEditor.components.Polygon> poligons)
         {
-            foreach (components.Poligon p in poligons)
+            foreach (components.Polygon p in poligons)
             {
-                foreach (poligonEditor.components.Point pt in p.GetPoints())
+                foreach (polygonEditor.components.Point pt in p.GetPoints())
                 {
                     yield return pt;
                 }
@@ -160,7 +160,7 @@ namespace poligonEditor.components
             return false;
         }
 
-        public IEnumerable<poligonEditor.components.Line> getLinesWithPoint(components.Point point)
+        public IEnumerable<polygonEditor.components.Line> getLinesWithPoint(components.Point point)
         {
             foreach (var l in lines)
             {
@@ -169,7 +169,7 @@ namespace poligonEditor.components
             }
         }
 
-        public void movePoligon(poligonEditor.components.Point firstPoint, poligonEditor.components.Point secondPoint)
+        public void movePoligon(polygonEditor.components.Point firstPoint, polygonEditor.components.Point secondPoint)
         {
             foreach(var p in GetPoints())
             {
@@ -192,7 +192,7 @@ namespace poligonEditor.components
             lines.Remove(l2);
         }
 
-        public IEnumerable<poligonEditor.components.Line> GetLinesFromLine(poligonEditor.components.Line l)
+        public IEnumerable<polygonEditor.components.Line> GetLinesFromLine(polygonEditor.components.Line l)
         {
             bool[] visited = new bool[lines.Count];
             for (int i = 0; i < visited.Length; i++) visited[i] = false;
@@ -225,14 +225,14 @@ namespace poligonEditor.components
 
 
 
-            Stack<poligonEditor.components.Line> S = new Stack<Line>();
+            Stack<polygonEditor.components.Line> S = new Stack<Line>();
 
             S.Push(l);
             setVisited(l);
 
             while (S.Count > 0)
             {
-                poligonEditor.components.Line tmp = S.Pop();
+                polygonEditor.components.Line tmp = S.Pop();
                 yield return tmp;
 
 
@@ -263,10 +263,10 @@ namespace poligonEditor.components
 
         }
 
-        public void fixPoligon(components.Point movingPoint, IEnumerable<poligonEditor.misc.IRelation> relations)
+        public void fixPoligon(components.Point movingPoint, IEnumerable<polygonEditor.misc.IRelation> relations)
         {
             // Find all relations that we care of in this poligon
-            List<poligonEditor.misc.IRelation> poligonRelations = new List<poligonEditor.misc.IRelation>();
+            List<polygonEditor.misc.IRelation> poligonRelations = new List<polygonEditor.misc.IRelation>();
             foreach(var line in lines)
             {
                 foreach (var rel in relations)

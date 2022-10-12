@@ -1,4 +1,4 @@
-﻿namespace poligonEditor
+﻿namespace polygonEditor
 {
     partial class mainWindow
     {
@@ -163,7 +163,7 @@
             this.ClientSize = new System.Drawing.Size(784, 761);
             this.Controls.Add(this.mainPictureBox);
             this.Name = "mainWindow";
-            this.Text = "poligonEditor";
+            this.Text = "polygonEditor";
             this.Resize += new System.EventHandler(this.mainWindow_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.mainPictureBox)).EndInit();
             this.contextMenuStrip.ResumeLayout(false);

@@ -1,17 +1,17 @@
-﻿using poligonEditor.components;
+﻿using polygonEditor.components;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace poligonEditor.misc
+namespace polygonEditor.misc
 {
-    internal class lengthRelation : poligonEditor.misc.IRelation, IDisposable
+    internal class lengthRelation : polygonEditor.misc.IRelation, IDisposable
     {
-        public poligonEditor.components.Line l { get; private set; }
+        public polygonEditor.components.Line l { get; private set; }
         public float length { get; private set; }
-        public lengthRelation(poligonEditor.components.Line l, float displayLength)
+        public lengthRelation(polygonEditor.components.Line l, float displayLength)
         {
             this.l = l;
             this.length = displayLength * displayLength;
@@ -20,7 +20,7 @@ namespace poligonEditor.misc
         {
             return Math.Abs((float)(l.length - this.length));
         }
-        public float ScoreForLine(poligonEditor.components.Line l)
+        public float ScoreForLine(polygonEditor.components.Line l)
         {
             return Math.Abs((float)(l.length - this.length));
         }
@@ -58,7 +58,7 @@ namespace poligonEditor.misc
             yield return this.l;
         }
 
-        public float ScoreWithChange(int dx, int dy, poligonEditor.components.Point movingPoint)
+        public float ScoreWithChange(int dx, int dy, polygonEditor.components.Point movingPoint)
         {
             // We check if movingPoint is on line if so, choose other
             if (l.Pt1 == movingPoint)

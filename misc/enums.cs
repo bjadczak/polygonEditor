@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace poligonEditor.misc
+namespace polygonEditor.misc
 {
     internal class enums
     {

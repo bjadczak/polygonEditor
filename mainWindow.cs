@@ -1,5 +1,5 @@
-﻿using poligonEditor.components;
-using poligonEditor.misc;
+﻿using polygonEditor.components;
+using polygonEditor.misc;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,7 +15,7 @@ using System.Windows.Forms.VisualStyles;
 using static System.Windows.Forms.LinkLabel;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolTip;
 
-namespace poligonEditor
+namespace polygonEditor
 {
     public partial class mainWindow : Form
     {
@@ -23,12 +23,12 @@ namespace poligonEditor
         private Bitmap drawArea;
 
         // List of poligons we have on the screen
-        List<components.Poligon> poli = new List<components.Poligon>();
+        List<components.Polygon> polygons = new List<components.Polygon>();
 
-        // Listo of references to points of poli that is being build
+        // Listo of references to points of polygons that is being build
         List<components.Point> buildingPoints = new List<components.Point>();
 
-        components.Poligon tmpPoli = null;
+        components.Polygon tmpPoli = null;
 
         // Moste recent point where we saw mouse
         components.Point movingPoint = null;
@@ -37,8 +37,8 @@ namespace poligonEditor
         components.Point holdingPoint = null;
         // Line of poligon we are moving
         components.Line holdingLine = null;
-        // Poligon we are moving
-        components.Poligon holdingPoligon = null;
+        // Polygon we are moving
+        components.Polygon holdingPoligon = null;
 
         // Active mode of input
         misc.enums.mode activeMode = misc.enums.mode.addingPoint;
@@ -88,7 +88,7 @@ namespace poligonEditor
             }
 
             // Draw all poligons taht we have stored
-            foreach (components.Poligon p in poli)
+            foreach (components.Polygon p in polygons)
             {
                 p.Draw(drawArea);
             }
@@ -100,7 +100,7 @@ namespace poligonEditor
         {
             components.Point actPoint = new components.Point(X, Y);
             // If we are building poligon, check if new point is overlapping with already added
-            if (buildingPoints.Count() > 0 && !(poligonEditor.components.Poligon.checkOverallping(actPoint, buildingPoints, tmpPoli.startingPoint) is null)) return;
+            if (buildingPoints.Count() > 0 && !(polygonEditor.components.Polygon.checkOverallping(actPoint, buildingPoints, tmpPoli.startingPoint) is null)) return;
 
             // Check if we are creating new poligon from scrach
             if (tmpPoli is null)
@@ -108,20 +108,20 @@ namespace poligonEditor
                 // If we are not build a poligon, we shopuld check if we have clocked on an edge
                 if (addPointInTheMiddle(X, Y)) return;
                 // Check if we are overlapping with existing poligon point
-                if (!(poligonEditor.components.Poligon.checkOverallping(actPoint, poligonEditor.components.Poligon.GetPointsFrom(poli)) is null)) return;
-                tmpPoli = new components.Poligon(actPoint);
+                if (!(polygonEditor.components.Polygon.checkOverallping(actPoint, polygonEditor.components.Polygon.GetPointsFrom(polygons)) is null)) return;
+                tmpPoli = new components.Polygon(actPoint);
                 buildingPoints.Add(actPoint);
             }
             else
             {
                 movingPoint = null;
-                if (tmpPoli.addNewPoint(actPoint, poligonEditor.components.Poligon.GetPointsFrom(poli)))
+                if (tmpPoli.addNewPoint(actPoint, polygonEditor.components.Polygon.GetPointsFrom(polygons)))
                 {
                     buildingPoints.Add(actPoint);
 
                     if (tmpPoli.isPoligonComplet())
                     {
-                        poli.Add(tmpPoli);
+                        polygons.Add(tmpPoli);
                         tmpPoli = null;
                         buildingPoints.Clear();
                         drawOnPictureBox();
@@ -138,7 +138,7 @@ namespace poligonEditor
         {
             components.Point actPoint = new components.Point(X, Y);
             // Moving a point we check which point is selected
-            poligonEditor.components.Point closest = poligonEditor.components.Point.findClosest(poligonEditor.components.Poligon.GetPointsFrom(poli), actPoint);
+            polygonEditor.components.Point closest = polygonEditor.components.Point.findClosest(polygonEditor.components.Polygon.GetPointsFrom(polygons), actPoint);
 
             if (!(closest is null))
             {
@@ -164,7 +164,7 @@ namespace poligonEditor
         private void moveAnEdge(int X, int Y)
         {
             components.Point actPoint = new components.Point(X, Y);
-            poligonEditor.components.Line closest = poligonEditor.components.Line.findFirstOnLine(poligonEditor.components.Poligon.GetLinesFrom(poli), actPoint);
+            polygonEditor.components.Line closest = polygonEditor.components.Line.findFirstOnLine(polygonEditor.components.Polygon.GetLinesFrom(polygons), actPoint);
             if (!(closest is null))
             {
                 holdingLine = closest;
@@ -179,10 +179,10 @@ namespace poligonEditor
         private void movePoligon(int X, int Y)
         {
             components.Point actPoint = new components.Point(X, Y);
-            poligonEditor.components.Line closest = poligonEditor.components.Line.findFirstOnLine(poligonEditor.components.Poligon.GetLinesFrom(poli), actPoint);
+            polygonEditor.components.Line closest = polygonEditor.components.Line.findFirstOnLine(polygonEditor.components.Polygon.GetLinesFrom(polygons), actPoint);
             if (!(closest is null))
             {
-                foreach (var p in poli)
+                foreach (var p in polygons)
                 {
                     if (p.containsLine(closest))
                     {
@@ -202,17 +202,17 @@ namespace poligonEditor
         private void deletePoint(int X, int Y)
         {
             components.Point actPoint = new components.Point(X, Y);
-            poligonEditor.components.Point closest = poligonEditor.components.Point.findClosest(poligonEditor.components.Poligon.GetPointsFrom(poli), actPoint);
+            polygonEditor.components.Point closest = polygonEditor.components.Point.findClosest(polygonEditor.components.Polygon.GetPointsFrom(polygons), actPoint);
 
             if (!(closest is null))
             {
-                foreach(var p in poli)
+                foreach(var p in polygons)
                 {
                     if (p.containsPoint(closest))
                     {
                         if(p.Count <= 2)
                         {
-                            poli.Remove(p);
+                            polygons.Remove(p);
                             for (int i = 0; i < relations.Count; i++)
                             {
                                 if (relations[i].isThisPointInRelation(closest))
@@ -243,17 +243,17 @@ namespace poligonEditor
         private bool addPointInTheMiddle(int X, int Y)
         {
             components.Point actPoint = new components.Point(X, Y);
-            poligonEditor.components.Line closest = poligonEditor.components.Line.findFirstOnLine(poligonEditor.components.Poligon.GetLinesFrom(poli), actPoint);
+            polygonEditor.components.Line closest = polygonEditor.components.Line.findFirstOnLine(polygonEditor.components.Polygon.GetLinesFrom(polygons), actPoint);
             if (!(closest is null))
             {
-                foreach (var p in poli)
+                foreach (var p in polygons)
                 {
                     if (p.containsLine(closest))
                     {
 
-                        poligonEditor.components.Point tmp = new poligonEditor.components.Point((closest.Pt1.x + closest.Pt2.x) / 2, (closest.Pt1.y + closest.Pt2.y) / 2);
+                        polygonEditor.components.Point tmp = new polygonEditor.components.Point((closest.Pt1.x + closest.Pt2.x) / 2, (closest.Pt1.y + closest.Pt2.y) / 2);
 
-                        p.lines.Add(new poligonEditor.components.Line(tmp, closest.Pt2));
+                        p.lines.Add(new polygonEditor.components.Line(tmp, closest.Pt2));
                         closest.setPt2(tmp);
 
                         break;
@@ -270,22 +270,22 @@ namespace poligonEditor
         private void addRelationLength(int X, int Y)
         {
             components.Point actPoint = new components.Point(X, Y);
-            poligonEditor.components.Line closest = poligonEditor.components.Line.findFirstOnLine(poligonEditor.components.Poligon.GetLinesFrom(poli), actPoint);
+            polygonEditor.components.Line closest = polygonEditor.components.Line.findFirstOnLine(polygonEditor.components.Polygon.GetLinesFrom(polygons), actPoint);
             if (!(closest is null))
             {
                 if (!(activeLine is null)) activeLine.selected = false;
                 activeLine = null;
                 closest.selected = true;
                 drawOnPictureBox();
-                int ret = poligonEditor.misc.inputDialog.ShowDialog("Fixed length relation", "Please input desired length", closest.displayLength);
+                int ret = polygonEditor.misc.inputDialog.ShowDialog("Fixed length relation", "Please input desired length", closest.displayLength);
                 if (ret <= 0)
                 {
                     closest.selected = false;
                     return;
                 }
                 closest.selected = false;
-                relations.Add(new poligonEditor.misc.lengthRelation(closest, ret));
-                foreach (var p in poli)
+                relations.Add(new polygonEditor.misc.lengthRelation(closest, ret));
+                foreach (var p in polygons)
                 {
                     if (p.containsLine(closest))
                     {
@@ -302,7 +302,7 @@ namespace poligonEditor
         private void addRelationParallel(int X, int Y)
         {
             components.Point actPoint = new components.Point(X, Y);
-            poligonEditor.components.Line closest = poligonEditor.components.Line.findFirstOnLine(poligonEditor.components.Poligon.GetLinesFrom(poli), actPoint);
+            polygonEditor.components.Line closest = polygonEditor.components.Line.findFirstOnLine(polygonEditor.components.Polygon.GetLinesFrom(polygons), actPoint);
 
             // Check if it is a second sine selected
             if (activeLine is null)
@@ -325,7 +325,7 @@ namespace poligonEditor
                     // Add paralell relation
                     relations.Add(new angleRelation(activeLine, closest));
 
-                    foreach (var p in poli)
+                    foreach (var p in polygons)
                     {
                         if (p.containsLine(closest))
                         {
@@ -408,13 +408,13 @@ namespace poligonEditor
         // they click
         private void mouseMoveOverCanvas(object sender, MouseEventArgs e)
         {
-            poligonEditor.components.Point tmp = movingPoint;
+            polygonEditor.components.Point tmp = movingPoint;
             movingPoint = new components.Point(e.X, e.Y);
 
             if (!(holdingPoint is null))
             {
                 holdingPoint.movePoint(movingPoint);
-                foreach(var p in poli)
+                foreach(var p in polygons)
                 {
                     if (p.containsPoint(holdingPoint)) p.fixPoligon(holdingPoint, relations);
                 }
@@ -422,7 +422,7 @@ namespace poligonEditor
             else if (!(holdingLine is null) && !(tmp is null))
             {
                 holdingLine.moveLine(tmp, movingPoint);
-                foreach (var p in poli)
+                foreach (var p in polygons)
                 {
                     if (p.containsPoint(holdingLine.Pt1)) p.fixPoligon(holdingLine.Pt1, relations);
                     if (p.containsPoint(holdingLine.Pt2)) p.fixPoligon(holdingLine.Pt2, relations);
@@ -496,7 +496,7 @@ namespace poligonEditor
         {
             bresenhamsAlgorithmMethodOfDrawingMenuItem.Checked = false;
             defaultMethodOfDrawingMenuItem.Checked = true;
-            poligonEditor.components.Line.useBresenhams = false;
+            polygonEditor.components.Line.useBresenhams = false;
             drawOnPictureBox();
         }
 
@@ -504,7 +504,7 @@ namespace poligonEditor
         {
             defaultMethodOfDrawingMenuItem.Checked = false;
             bresenhamsAlgorithmMethodOfDrawingMenuItem.Checked = true;
-            poligonEditor.components.Line.useBresenhams = true;
+            polygonEditor.components.Line.useBresenhams = true;
             drawOnPictureBox();
         }
 

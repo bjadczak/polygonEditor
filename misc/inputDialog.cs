@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace poligonEditor.misc
+namespace polygonEditor.misc
 {
     public static class inputDialog
     {
@@ -29,6 +29,7 @@ namespace poligonEditor.misc
             prompt.AcceptButton = confirmation;
 
             string outPut = prompt.ShowDialog() == DialogResult.OK ? textBox.Text : "";
+            if (outPut.Length <= 0) return -1;
             int result = (int)float.Parse(outPut);
             return result;
         }

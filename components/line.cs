@@ -1,4 +1,4 @@
-﻿using poligonEditor.misc;
+﻿using polygonEditor.misc;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -9,7 +9,7 @@ using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace poligonEditor.components
+namespace polygonEditor.components
 {
     internal class Line : IDisposable
     {
@@ -139,7 +139,7 @@ namespace poligonEditor.components
         }
 
         // Check if point is on this line
-        public bool IsOnLine(poligonEditor.components.Point p)
+        public bool IsOnLine(polygonEditor.components.Point p)
         {
             using (var path = new GraphicsPath())
             {
@@ -152,7 +152,7 @@ namespace poligonEditor.components
         }
 
         // Find first line that is on the given point
-        public static poligonEditor.components.Line findFirstOnLine(IEnumerable<components.Line> lines, components.Point point)
+        public static polygonEditor.components.Line findFirstOnLine(IEnumerable<components.Line> lines, components.Point point)
         {
             if (lines.Count() <= 0) return null;
 
@@ -164,7 +164,7 @@ namespace poligonEditor.components
             return null;
         }
 
-        public void moveLine(poligonEditor.components.Point firstPoint, poligonEditor.components.Point secondPoint, IEnumerable<poligonEditor.misc.IRelation> relations = null)
+        public void moveLine(polygonEditor.components.Point firstPoint, polygonEditor.components.Point secondPoint, IEnumerable<polygonEditor.misc.IRelation> relations = null)
         {
             Pt1.movePointByDelta(secondPoint.x - firstPoint.x, secondPoint.y - firstPoint.y);
             Pt2.movePointByDelta(secondPoint.x - firstPoint.x, secondPoint.y - firstPoint.y);
@@ -383,7 +383,7 @@ namespace poligonEditor.components
                 for (int i = 1; i >= -1; i--)
                     for (int j = 1; j >= -1; j--)
                     {
-                        var tmp = relation.ScoreWithChanges(i, j, this == relation.l1 ? relation.l2 : relation.l1) + getScorePartial();
+                        var tmp = relation.ScoreWithChanges(i, j, this, movingPoint) + getScorePartial();
                         if (tmp < bestScore)
                         {
                             dx = i;
@@ -393,7 +393,7 @@ namespace poligonEditor.components
                     }
                 if (bestScore < float.MaxValue && bestScore < score)
                 {
-                    relation.moveByChange(dx, dy, this == relation.l1 ? relation.l2 : relation.l1);
+                    relation.moveByChange(dx, dy, this, movingPoint);
                 }
                 else
                 {

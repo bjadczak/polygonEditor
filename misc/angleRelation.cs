@@ -1,4 +1,4 @@
-﻿using poligonEditor.components;
+﻿using polygonEditor.components;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,9 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Schema;
 
-namespace poligonEditor.misc
+namespace polygonEditor.misc
 {
-    internal class angleRelation : poligonEditor.misc.IRelation, IDisposable
+    internal class angleRelation : polygonEditor.misc.IRelation, IDisposable
     {
         private int modifier = 5;
         public components.Line l1 { get; private set; }
@@ -43,10 +43,10 @@ namespace poligonEditor.misc
         {
             return modifier * Math.Abs((float)(l1.atan - l2.atan));
         }
-        public float ScoreWithChanges(int dx, int dy, components.Line moveLine)
+        public float ScoreWithChanges(int dx, int dy, components.Line moveLine, components.Point movingPoint)
         {
             if (l2 == moveLine)
-                return modifier*Math.Min(
+                return modifier * Math.Min(
                         Math.Abs((float)(l1.atan - (float)Math.Atan((l2.Pt2.y + dy - l2.Pt1.y) / (l2.Pt2.x + dx - l2.Pt1.x)))),
                         Math.Abs((float)(l1.atan - (float)Math.Atan((l2.Pt2.y - l2.Pt1.y - dy) / (l2.Pt2.x - l2.Pt1.x - dx))))
                         );
@@ -56,12 +56,13 @@ namespace poligonEditor.misc
                         Math.Abs((float)(l2.atan - (float)Math.Atan((l1.Pt2.y - l1.Pt1.y - dy) / (l1.Pt2.x - l1.Pt1.x - dx))))
                         );
         }
-        public void moveByChange(int dx, int dy, components.Line moveLine)
+        public void moveByChange(int dx, int dy, components.Line moveLine, components.Point movingPoint)
         {
-            if (l2 == moveLine) {
+            if (l2 == moveLine)
+            {
                 float atan1 = Math.Abs((float)(l1.atan - (float)Math.Atan((l2.Pt2.y + dy - l2.Pt1.y) / (l2.Pt2.x + dx - l2.Pt1.x))));
                 float atan2 = Math.Abs((float)(l1.atan - (float)Math.Atan((l2.Pt2.y - l2.Pt1.y - dy) / (l2.Pt2.x - l2.Pt1.x - dx))));
-                if(atan1 < atan2)
+                if (atan1 < atan2)
                 {
                     l2.Pt2.movePointByDelta(dx, dy);
                 }

@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{0445C0EB-B014-4FDB-AD9B-482881925839}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>poligonEditor</RootNamespace>
-    <AssemblyName>poligonEditor</AssemblyName>
+    <RootNamespace>polygonEditor</RootNamespace>
+    <AssemblyName>polygonEditor</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -48,7 +48,7 @@
   <ItemGroup>
     <Compile Include="components\line.cs" />
     <Compile Include="components\point.cs" />
-    <Compile Include="components\poligon.cs" />
+    <Compile Include="components\polygon.cs" />
     <Compile Include="mainWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -73,6 +73,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
