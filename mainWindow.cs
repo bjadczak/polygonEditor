@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
+using System.Xml.Linq;
 using static System.Windows.Forms.LinkLabel;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ToolTip;
 
@@ -92,7 +93,8 @@ namespace polygonEditor
             {
                 p.Draw(drawArea);
             }
-            
+
+
             mainPictureBox.Refresh();
         }
 

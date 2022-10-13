@@ -1,9 +1,13 @@
 ﻿using polygonEditor.components;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Xml.Schema;
 
 namespace polygonEditor.misc
 {
@@ -11,10 +15,15 @@ namespace polygonEditor.misc
     {
         public polygonEditor.components.Line l { get; private set; }
         public float length { get; private set; }
+
+        public string label;
+
         public lengthRelation(polygonEditor.components.Line l, float displayLength)
         {
             this.l = l;
             this.length = displayLength * displayLength;
+            label = String.Format("{0}", (displayLength).ToString());
+            l.labels.Add(label);
         }
         public float Score()
         {
@@ -39,16 +48,14 @@ namespace polygonEditor.misc
 
             return Math.Abs((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2) - this.length);
 
-
-
         }
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            l.labels.Remove(label);
         }
 
-        public bool isThisPointInRelation(Point p)
+        public bool isThisPointInRelation(polygonEditor.components.Point p)
         {
             return l.Pt1 == p || l.Pt2 == p;
         }
@@ -78,7 +85,7 @@ namespace polygonEditor.misc
             }
         }
 
-        public void moveByChange(int dx, int dy, Point movingPoint)
+        public void moveByChange(int dx, int dy, polygonEditor.components.Point movingPoint)
         {
             if (l.Pt1 == movingPoint)
             {
@@ -101,5 +108,6 @@ namespace polygonEditor.misc
         {
             l.fixForLength(this, movingPoint, relations);
         }
+
     }
 }

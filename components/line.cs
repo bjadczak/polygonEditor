@@ -5,9 +5,11 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace polygonEditor.components
 {
@@ -35,6 +37,16 @@ namespace polygonEditor.components
         // Create drawing mechanisms for being selected
         Bresenham bS = new Bresenham((Brush)Brushes.Blue);
         defaultDrawing dS = new defaultDrawing(new Pen(Color.Blue, width*2));
+
+        public List<string> labels = new List<string>();
+
+        public Tuple<float, float> middlePoint
+        {
+            get
+            {
+                return new Tuple<float, float>((Pt1.x + Pt2.x) / 2, (Pt1.y + Pt2.y) / 2);
+            }
+        }
 
         // Information for seting two lines as parrallel
         public double atan 
@@ -108,6 +120,21 @@ namespace polygonEditor.components
             
             Pt1.Draw(drawArea);
             Pt2.Draw(drawArea);
+
+            if (labels.Count <= 0) return;
+
+            StringBuilder label = new StringBuilder();
+
+            foreach (var l in labels)
+            {
+                label.Append(l);
+                label.Append("\n");
+            }
+
+            using (Graphics g = Graphics.FromImage(drawArea))
+            {
+                g.DrawString(label.ToString(), new Font("Tahoma", 8), Brushes.Black, middlePoint.Item1, middlePoint.Item2);
+            }
         }
 
         // Draw lines that are selected to be in relation
