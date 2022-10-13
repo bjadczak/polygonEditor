@@ -1,4 +1,4 @@
-# poligonEditor
+# polygonEditor
 
 ![image](https://user-images.githubusercontent.com/73365815/195675582-0332805e-5b08-4a7e-b1bc-76040a4c4b88.png)
 
