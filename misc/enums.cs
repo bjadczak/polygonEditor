@@ -17,6 +17,7 @@ namespace polygonEditor.misc
             deletingPoint,
             addingRelationLength,
             addingRelationParallel,
+            deletingRelations,
         }
     }
 }

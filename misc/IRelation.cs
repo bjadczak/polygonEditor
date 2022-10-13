@@ -14,5 +14,7 @@ namespace polygonEditor.misc
         bool isThisPointInRelation(polygonEditor.components.Point p);
         void Fix(polygonEditor.components.Line l, components.Point movingPoint, IEnumerable<IRelation> relations);
 
+        void deleteLabel();
+
     }
 }

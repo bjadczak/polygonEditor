@@ -52,7 +52,7 @@ namespace polygonEditor.misc
 
         public void Dispose()
         {
-            l.labels.Remove(label);
+            this.deleteLabel();
         }
 
         public bool isThisPointInRelation(polygonEditor.components.Point p)
@@ -109,5 +109,9 @@ namespace polygonEditor.misc
             l.fixForLength(this, movingPoint, relations);
         }
 
+        public void deleteLabel()
+        {
+            l.labels.Remove(label);
+        }
     }
 }

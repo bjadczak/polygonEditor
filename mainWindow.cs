@@ -342,6 +342,21 @@ namespace polygonEditor
                 }
             }
         }
+        // Deleting relations on line
+        private void deleteRelations(int X, int Y)
+        {
+            components.Point actPoint = new components.Point(X, Y);
+            polygonEditor.components.Line closest = polygonEditor.components.Line.findFirstOnLine(polygonEditor.components.Polygon.GetLinesFrom(polygons), actPoint);
+            if (!(closest is null))
+            { 
+                Predicate<IRelation> constainsClosest = r => r.isThisLineInRelation(closest);
+                foreach (var rel in relations.FindAll(constainsClosest)) rel.deleteLabel();
+                
+                relations.RemoveAll(constainsClosest);
+
+                drawOnPictureBox();
+            }
+        }
 
         private void clickOnPictureBox(object sender, MouseEventArgs e)
         {
@@ -384,6 +399,11 @@ namespace polygonEditor
                         case misc.enums.mode.addingRelationParallel:
                             {
                                 addRelationParallel(e.X, e.Y);
+                            }
+                            break;
+                        case misc.enums.mode.deletingRelations:
+                            {
+                                deleteRelations(e.X, e.Y);
                             }
                             break;
                         default:
@@ -526,5 +546,11 @@ namespace polygonEditor
             activeMode = misc.enums.mode.addingRelationParallel;
         }
 
+        private void deleteRelationsMenuItem_Click(object sender, EventArgs e)
+        {
+            resetContextMenu();
+            deleteRelationsMenuItem.Checked = true;
+            activeMode = misc.enums.mode.deletingRelations;
+        }
     }
 }

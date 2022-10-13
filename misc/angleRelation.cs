@@ -29,8 +29,7 @@ namespace polygonEditor.misc
         }
         public void Dispose()
         {
-            l1.labels.Remove(label);
-            l1.labels.Remove(label);
+            this.deleteLabel();
         }
 
         public void Fix(Line l, components.Point movingPoint, IEnumerable<IRelation> relations)
@@ -90,5 +89,10 @@ namespace polygonEditor.misc
 
         }
 
+        public void deleteLabel()
+        {
+            l1.labels.Remove(label);
+            l2.labels.Remove(label);
+        }
     }
 }
