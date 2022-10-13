@@ -1,4 +1,8 @@
 # poligonEditor
+
+![image](https://user-images.githubusercontent.com/73365815/195675582-0332805e-5b08-4a7e-b1bc-76040a4c4b88.png)
+
+
 This is a project for *Computer Graphics 2022* course on Computer Science course. Starting this project there were defined crutial functionalities that needed to be implemented into the code, they are:
 - Adding, editing and deleting a polygon
 - For editing:
@@ -18,7 +22,11 @@ This is a project for *Computer Graphics 2022* course on Computer Science course
 
 ---
 ## Usage
-This program operates in couple of modes, that user can select by clicking with RMB on drawing area and selecting desired mode from context menu. Modes are:
+This program operates in couple of modes, that user can select by clicking with RMB on drawing area and selecting desired mode from context menu.
+
+![image](https://user-images.githubusercontent.com/73365815/195675925-18e4056f-e610-4705-b5b9-4d08fd1871ae.png)
+
+Modes are:
 - Adding a point
 - Moving a point
 - Moving an edge
@@ -28,3 +36,4 @@ This program operates in couple of modes, that user can select by clicking with 
   - Adding fixed length relation
   - Adding parallelism relation
 User can manipulate polygons in each of this modes. Apart from that, user can also choose in contex menu which algoritm of drawing line to use.
+
