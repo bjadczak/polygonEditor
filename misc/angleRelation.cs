@@ -45,24 +45,20 @@ namespace polygonEditor.misc
         }
         public float ScoreWithChanges(int dx, int dy, components.Line moveLine, components.Point movingPoint)
         {
+
             if (l2 == moveLine)
-                return modifier * Math.Min(
-                        Math.Abs((float)(l1.atan - (float)Math.Atan((l2.Pt2.y + dy - l2.Pt1.y) / (l2.Pt2.x + dx - l2.Pt1.x)))),
-                        Math.Abs((float)(l1.atan - (float)Math.Atan((l2.Pt2.y - l2.Pt1.y - dy) / (l2.Pt2.x - l2.Pt1.x - dx))))
-                        );
+                if (l2.Pt1 == movingPoint) return modifier * Math.Abs((float)(l1.atan - (float)Math.Atan((l2.Pt2.y - l2.Pt1.y - dy) / (l2.Pt2.x - l2.Pt1.x - dx))));
+                else return modifier * Math.Abs((float)(l1.atan - (float)Math.Atan((l2.Pt2.y + dy - l2.Pt1.y) / (l2.Pt2.x + dx - l2.Pt1.x))));
             else
-                return modifier * Math.Min(
-                        Math.Abs((float)(l2.atan - (float)Math.Atan((l1.Pt2.y + dy - l1.Pt1.y) / (l1.Pt2.x + dx - l1.Pt1.x)))),
-                        Math.Abs((float)(l2.atan - (float)Math.Atan((l1.Pt2.y - l1.Pt1.y - dy) / (l1.Pt2.x - l1.Pt1.x - dx))))
-                        );
+                if (l1.Pt1 == movingPoint) return modifier * Math.Abs((float)(l2.atan - (float)Math.Atan((l1.Pt2.y - l1.Pt1.y - dy) / (l1.Pt2.x - l1.Pt1.x - dx))));
+            else return modifier * Math.Abs((float)(l2.atan - (float)Math.Atan((l1.Pt2.y + dy - l1.Pt1.y) / (l1.Pt2.x + dx - l1.Pt1.x))));
+
         }
         public void moveByChange(int dx, int dy, components.Line moveLine, components.Point movingPoint)
         {
             if (l2 == moveLine)
             {
-                float atan1 = Math.Abs((float)(l1.atan - (float)Math.Atan((l2.Pt2.y + dy - l2.Pt1.y) / (l2.Pt2.x + dx - l2.Pt1.x))));
-                float atan2 = Math.Abs((float)(l1.atan - (float)Math.Atan((l2.Pt2.y - l2.Pt1.y - dy) / (l2.Pt2.x - l2.Pt1.x - dx))));
-                if (atan1 < atan2)
+                if (l2.Pt2 == movingPoint)
                 {
                     l2.Pt2.movePointByDelta(dx, dy);
                 }
@@ -73,9 +69,7 @@ namespace polygonEditor.misc
             }
             else
             {
-                float atan1 = Math.Abs((float)(l2.atan - (float)Math.Atan((l1.Pt2.y + dy - l1.Pt1.y) / (l1.Pt2.x + dx - l1.Pt1.x))));
-                float atan2 = Math.Abs((float)(l2.atan - (float)Math.Atan((l1.Pt2.y - l1.Pt1.y - dy) / (l1.Pt2.x - l1.Pt1.x - dx))));
-                if (atan1 < atan2)
+                if (l1.Pt2 == movingPoint)
                 {
                     l1.Pt2.movePointByDelta(dx, dy);
                 }
