@@ -59,6 +59,8 @@ namespace polygonEditor
             drawArea = new Bitmap(mainPictureBox.Size.Width, mainPictureBox.Size.Height);
             mainPictureBox.Image = drawArea;
 
+            createDefoultPolygons();
+
             drawOnPictureBox();
         }
 
@@ -70,6 +72,42 @@ namespace polygonEditor
             drawArea = new Bitmap(mainPictureBox.Size.Width, mainPictureBox.Size.Height);
             mainPictureBox.Image = drawArea;
             drawOnPictureBox();
+        }
+        
+        private void createDefoultPolygons()
+        {
+            List<Line> polygonOneLines = new List<Line>();
+            List<Line> polygonTwoLines = new List<Line>();
+            
+            components.Point p1pt1 = new components.Point(50, 50);
+            components.Point p1pt2 = new components.Point(50, 200);
+            components.Point p1pt3 = new components.Point(200, 200);
+
+            components.Point p2pt1 = new components.Point(400, 400);
+            components.Point p2pt2 = new components.Point(400, 250);
+            components.Point p2pt3 = new components.Point(250, 250);
+
+            Line parralelLine1 = new Line(p1pt3, p1pt1);
+            Line parralelLine2 = new Line(p2pt3, p2pt1);
+
+            Line fixedLengthLine = new Line(p1pt1, p1pt2);
+
+            polygonOneLines.Add(fixedLengthLine);
+            polygonOneLines.Add(new Line(p1pt2, p1pt3));
+            polygonOneLines.Add(parralelLine1);
+
+            polygonTwoLines.Add(new Line(p2pt1, p2pt2));
+            polygonTwoLines.Add(new Line(p2pt2, p2pt3));
+            polygonTwoLines.Add(parralelLine2);
+
+            var polygonOne = new Polygon(polygonOneLines);
+            var polygonTwo = new Polygon(polygonTwoLines);
+
+            polygons.Add(polygonOne);
+            polygons.Add(polygonTwo);
+
+            relations.Add(new angleRelation(parralelLine1, parralelLine2));
+            relations.Add(new lengthRelation(fixedLengthLine, 150));
         }
 
         // Method that calls to draw specific vertixces and lines

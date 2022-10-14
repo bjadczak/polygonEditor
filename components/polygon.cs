@@ -34,6 +34,20 @@ namespace polygonEditor.components
             startingPoint = null;
             finishingPoint = null;
         }
+        // Constructor for creating default polygons on grid
+        public Polygon(List<Line> lines)
+        {
+            this.lines = new List<components.Line>();
+            InstanceID = Guid.NewGuid();
+            startingPoint = null;
+            finishingPoint = null;
+            if (lines.Count < 2) throw new InvalidOperationException("Not enough lines in polygon constructor");
+            startingPoint = finishingPoint = lines[0].Pt1;
+            foreach(var line in lines)
+            {
+                this.lines.Add(line);
+            }
+        }
         public Polygon(components.Point startingPoint)
         {
             lines = new List<components.Line>();
