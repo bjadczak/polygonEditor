@@ -34,7 +34,22 @@ namespace polygonEditor.misc
 
         public void Fix(Line l, components.Point movingPoint, IEnumerable<IRelation> relations)
         {
-            l.fixForAngle(this, movingPoint, relations);
+            if(l == l1)
+            {
+                if(movingPoint == l1.Pt1)
+                    l2.fixForAngle(this, l2.Pt1, relations);
+                else
+                    l2.fixForAngle(this, l2.Pt2, relations);
+            }                
+            else if(l == l2)
+            {
+                if (movingPoint == l2.Pt1)
+                    l1.fixForAngle(this, l1.Pt1, relations);
+                else
+                    l1.fixForAngle(this, l1.Pt2, relations);
+            }
+            else
+                l.fixForAngle(this, movingPoint, relations);
         }
 
         public bool isThisLineInRelation(Line l)
