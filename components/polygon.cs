@@ -176,15 +176,6 @@ namespace polygonEditor.components
             return false;
         }
 
-        public IEnumerable<polygonEditor.components.Line> getLinesWithPoint(components.Point point)
-        {
-            foreach (var l in lines)
-            {
-                if (l.Pt1 == point) yield return l;
-                if (l.Pt2 == point) yield return l;
-            }
-        }
-
         public void movePoligon(polygonEditor.components.Point firstPoint, polygonEditor.components.Point secondPoint)
         {
             foreach(var p in GetPoints())
@@ -208,77 +199,7 @@ namespace polygonEditor.components
             lines.Remove(l2);
         }
 
-        public IEnumerable<polygonEditor.components.Line> GetLinesFromLine(polygonEditor.components.Line l)
-        {
-            bool[] visited = new bool[lines.Count];
-            for (int i = 0; i < visited.Length; i++) visited[i] = false;
-            //int count = visited.Length;
-
-            bool isVisited(Line lookedAt)
-            {
-                bool isLine(Line lin)
-                {
-                    return lin == lookedAt;
-                }
-
-                int idx = lines.FindIndex(isLine);
-
-                return visited[idx];
-
-            }
-            void setVisited(Line lookedAt)
-            {
-                bool isLine(Line lin)
-                {
-                    return lin == lookedAt;
-                }
-
-                int idx = lines.FindIndex(isLine);
-
-                visited[idx] = true;
-
-            }
-
-
-
-            Stack<polygonEditor.components.Line> S = new Stack<Line>();
-
-            S.Push(l);
-            setVisited(l);
-
-            while (S.Count > 0)
-            {
-                polygonEditor.components.Line tmp = S.Pop();
-                yield return tmp;
-
-
-                
-                
-
-                foreach(var lines in this.getLinesWithPoint(tmp.Pt1))
-                {
-                    if (!isVisited(lines))
-                    {
-                        setVisited(lines);
-                        S.Push(lines);
-                    }
-                }
-                foreach (var lines in this.getLinesWithPoint(tmp.Pt2))
-                {
-                    if (!isVisited(lines))
-                    {
-                        setVisited(lines);
-                        S.Push(lines);
-                    }
-                }
-
-
-            }
-
-            
-
-        }
-
+        // Function that should fix relations in our set of polygons
         public static void FixPoligons(IEnumerable<components.Polygon> polygons, IEnumerable<misc.IRelation> relations, components.Point stationaryPoint)
         {
             const float threshold = 1.0f;
@@ -305,6 +226,7 @@ namespace polygonEditor.components
 
                 foreach (var rel in relations)
                 {
+                    // We try to correct relation once
                     if(!rel.alreadyMoved())
                         foreach (var line in Polygon.GetLinesFrom(polygons))
                         {
@@ -314,6 +236,7 @@ namespace polygonEditor.components
                                 float startScore = rel.Score() + getScorePartial(rel);
                                 int dx = 0, dy = 0;
 
+                                // Check all possible directions and choose the best
                                 foreach(int i in new List<int>() { 0, 1, -1})
                                     foreach (int j in new List<int>() { 0, 1, -1 })
                                     {
@@ -326,7 +249,8 @@ namespace polygonEditor.components
                                         }
                                     }
 
-                                if (bestScore < float.MaxValue && bestScore < startScore)
+                                // Move if nessesary
+                                if (bestScore < startScore)
                                 {
                                     rel.moveByChange(dx, dy, line, stationaryPoint);
                                     rel.setMove(true);

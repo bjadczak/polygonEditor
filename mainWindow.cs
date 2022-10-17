@@ -327,7 +327,6 @@ namespace polygonEditor
                 relations.Add(new polygonEditor.misc.lengthRelation(closest, ret));
 
                 Polygon.FixPoligons(polygons, relations, null);
-                // TODO FIX RELATIONS
 
                 drawOnPictureBox();
             }
@@ -360,7 +359,6 @@ namespace polygonEditor
                     // Add paralell relation
                     relations.Add(new angleRelation(activeLine, closest));
 
-                    // TODO FIX RELATIONS
                     Polygon.FixPoligons(polygons, relations, null);
 
                     activeLine.selected = closest.selected = false;

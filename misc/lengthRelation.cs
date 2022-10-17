@@ -29,10 +29,6 @@ namespace polygonEditor.misc
         {
             return Math.Abs((float)(l.length - this.length));
         }
-        public float ScoreForLine(polygonEditor.components.Line l)
-        {
-            return Math.Abs((float)(l.length - this.length));
-        }
 
         public bool isThisLineInRelation(Line l)
         {
@@ -47,11 +43,6 @@ namespace polygonEditor.misc
         public bool isThisPointInRelation(polygonEditor.components.Point p)
         {
             return l.Pt1 == p || l.Pt2 == p;
-        }
-
-        public IEnumerable<Line> getLinesInRelation()
-        {
-            yield return this.l;
         }
 
 
