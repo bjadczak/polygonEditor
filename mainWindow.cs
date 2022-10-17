@@ -325,14 +325,9 @@ namespace polygonEditor
                 }
                 closest.selected = false;
                 relations.Add(new polygonEditor.misc.lengthRelation(closest, ret));
-                foreach (var p in polygons)
-                {
-                    if (p.containsLine(closest))
-                    {
-                        p.fixPoligon(closest.Pt2, relations);
-                        break;
-                    }
-                }
+
+                Polygon.FixPoligons(polygons, relations, null);
+                // TODO FIX RELATIONS
 
                 drawOnPictureBox();
             }
@@ -365,14 +360,8 @@ namespace polygonEditor
                     // Add paralell relation
                     relations.Add(new angleRelation(activeLine, closest));
 
-                    foreach (var p in polygons)
-                    {
-                        if (p.containsLine(closest))
-                        {
-                            p.fixPoligon(closest.Pt2, relations);
-                            break;
-                        }
-                    }
+                    // TODO FIX RELATIONS
+                    Polygon.FixPoligons(polygons, relations, null);
 
                     activeLine.selected = closest.selected = false;
                     activeLine = null;
@@ -474,19 +463,12 @@ namespace polygonEditor
             if (!(holdingPoint is null))
             {
                 holdingPoint.movePoint(movingPoint);
-                foreach(var p in polygons)
-                {
-                    if (p.containsPoint(holdingPoint)) p.fixPoligon(holdingPoint, relations);
-                }
+                Polygon.FixPoligons(polygons, relations, holdingPoint);
             }
             else if (!(holdingLine is null) && !(tmp is null))
             {
                 holdingLine.moveLine(tmp, movingPoint);
-                foreach (var p in polygons)
-                {
-                    if (p.containsPoint(holdingLine.Pt1)) p.fixPoligon(holdingLine.Pt1, relations);
-                    if (p.containsPoint(holdingLine.Pt2)) p.fixPoligon(holdingLine.Pt2, relations);
-                }
+                Polygon.FixPoligons(polygons, relations, holdingPoint);
             }
             else if (!(holdingPoligon is null) && !(tmp is null))
             {

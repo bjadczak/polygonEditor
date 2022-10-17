@@ -39,17 +39,6 @@ namespace polygonEditor.misc
             return l == this.l;
         }
 
-        private float scoreWithDelta(Line l, int dx1, int dy1, int dx2, int dy2)
-        {
-            float x1 = l.Pt1.x + dx1;
-            float y1 = l.Pt1.y + dy1;
-            float x2 = l.Pt2.x + dx2;
-            float y2 = l.Pt2.y + dy2;
-
-            return Math.Abs((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2) - this.length);
-
-        }
-
         public void Dispose()
         {
             this.deleteLabel();
@@ -65,53 +54,78 @@ namespace polygonEditor.misc
             yield return this.l;
         }
 
-        public float ScoreWithChange(int dx, int dy, polygonEditor.components.Point movingPoint)
-        {
-            // We check if movingPoint is on line if so, choose other
-            if (l.Pt1 == movingPoint)
-            {
-                return this.scoreWithDelta(this.l, 0, 0, dx, dy);
-            }
-            else if (l.Pt2 == movingPoint)
-            {
-                return this.scoreWithDelta(this.l, dx, dy, 0, 0);
-            }
-            else
-            {
-                var scorePt1 = this.scoreWithDelta(this.l, dx, dy, 0, 0);
-                var scorePt2 = this.scoreWithDelta(this.l, 0, 0, dx, dy);
-                if (scorePt1 > scorePt2) return scorePt2;
-                else return scorePt1;
-            }
-        }
-
-        public void moveByChange(int dx, int dy, polygonEditor.components.Point movingPoint)
-        {
-            if (l.Pt1 == movingPoint)
-            {
-                l.Pt2.movePointByDelta(dx, dy);
-            }
-            else if (l.Pt2 == movingPoint)
-            {
-                l.Pt1.movePointByDelta(dx, dy);
-            }
-            else
-            {
-                var scorePt1 = this.scoreWithDelta(this.l, dx, dy, 0, 0);
-                var scorePt2 = this.scoreWithDelta(this.l, 0, 0, dx, dy);
-                if (scorePt1 > scorePt2) l.Pt2.movePointByDelta(dx, dy);
-                else l.Pt1.movePointByDelta(dx, dy);
-            }
-        }
-
-        public void Fix(Line l, components.Point movingPoint, IEnumerable<IRelation> relations)
-        {
-            l.fixForLength(this, movingPoint, relations);
-        }
 
         public void deleteLabel()
         {
             l.labels.Remove(label);
+        }
+
+        private float scoreWithDelta(int dx1, int dy1, int dx2, int dy2)
+        {
+            return Math.Abs((l.Pt1.x + dx1 - l.Pt2.x - dx2) * (l.Pt1.x + dx1 - l.Pt2.x - dx2) + (l.Pt1.y + dy1 - l.Pt2.y - dy2) * (l.Pt1.y + dy1 - l.Pt2.y - dy2) - this.length);
+        }
+
+        public float scoreWithChange(int dx, int dy, Line activeLine, components.Point stationaryPoint)
+        {
+            if(l == activeLine)
+            {
+                if (l.Pt1 == stationaryPoint) 
+                {
+                    return scoreWithDelta(0, 0, dx, dy); 
+                }
+                else if (l.Pt2 == stationaryPoint)
+                {
+                    return scoreWithDelta(dx, dy, 0, 0);
+                }
+                else
+                {
+                    return Math.Min(
+                        scoreWithDelta(dx, dy, 0, 0),
+                        scoreWithDelta(0, 0, dx, dy)
+                        );
+                }
+            }
+            else
+            {
+                return float.MaxValue;
+            }
+        }
+
+        public void moveByChange(int dx, int dy, Line activeLine, components.Point stationaryPoint)
+        {
+            if (l == activeLine)
+            {
+                if (l.Pt1 == stationaryPoint)
+                {
+                    l.Pt2.movePointByDelta(dx, dy);
+                }
+                else if (l.Pt2 == stationaryPoint)
+                {
+                    l.Pt1.movePointByDelta(dx, dy);
+                }
+                else
+                {
+                    if(scoreWithDelta(dx, dy, 0, 0) < scoreWithDelta(0, 0, dx, dy))
+                    {
+                        l.Pt1.movePointByDelta(dx, dy);
+                    }
+                    else
+                    {
+                        l.Pt2.movePointByDelta(dx, dy);
+                    }
+                }
+            }
+        }
+
+        private bool _moved = false;
+        public bool alreadyMoved()
+        {
+            return _moved;
+        }
+
+        public void setMove(bool state)
+        {
+            _moved = state;
         }
     }
 }

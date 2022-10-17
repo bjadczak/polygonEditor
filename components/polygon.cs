@@ -1,7 +1,9 @@
-﻿using System;
+﻿using polygonEditor.misc;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -137,9 +139,9 @@ namespace polygonEditor.components
                 yield return l;
             }
         }
-        public static IEnumerable<polygonEditor.components.Line> GetLinesFrom(IEnumerable<polygonEditor.components.Polygon> poligons)
+        public static IEnumerable<polygonEditor.components.Line> GetLinesFrom(IEnumerable<polygonEditor.components.Polygon> polygons)
         {
-            foreach(components.Polygon p in poligons)
+            foreach(components.Polygon p in polygons)
             {
                 foreach(polygonEditor.components.Line l in p.GetLines())
                 {
@@ -154,9 +156,9 @@ namespace polygonEditor.components
                 yield return l.Pt1;
             }
         }
-        public static IEnumerable<polygonEditor.components.Point> GetPointsFrom(IEnumerable<polygonEditor.components.Polygon> poligons)
+        public static IEnumerable<polygonEditor.components.Point> GetPointsFrom(IEnumerable<polygonEditor.components.Polygon> polygons)
         {
-            foreach (components.Polygon p in poligons)
+            foreach (components.Polygon p in polygons)
             {
                 foreach (polygonEditor.components.Point pt in p.GetPoints())
                 {
@@ -277,47 +279,70 @@ namespace polygonEditor.components
 
         }
 
-        public void fixPoligon(components.Point movingPoint, IEnumerable<polygonEditor.misc.IRelation> relations)
+        public static void FixPoligons(IEnumerable<components.Polygon> polygons, IEnumerable<misc.IRelation> relations, components.Point stationaryPoint)
         {
-            // Find all relations that we care of in this poligon
-            List<polygonEditor.misc.IRelation> poligonRelations = new List<polygonEditor.misc.IRelation>();
-            foreach(var line in lines)
-            {
-                foreach (var rel in relations)
-                {
-                    if (rel.isThisLineInRelation(line) && !poligonRelations.Contains(rel)) poligonRelations.Add(rel);
-                }
-            }
-            Line activeLine = this.getLinesWithPoint(movingPoint).First();
-            // We fix all lines that have relations
             const float threshold = 1.0f;
             float score = 0;
-            foreach (var rel in poligonRelations) score += rel.Score();
             float prevScore = float.MaxValue;
-            var startPoint = movingPoint;
+
+            float getScorePartial(misc.IRelation relation)
+            {
+                float scorePartial = 0;
+                foreach (var rel in relations) if (rel != relation) scorePartial += rel.Score();
+                return scorePartial;
+            }
+            void resetMoved()
+            {
+                foreach (var rel in relations) rel.setMove(false);
+            }
+
+            foreach (var rel in relations) score += rel.Score();
+
             while (score > threshold && prevScore > score)
             {
                 prevScore = score;
                 score = 0;
-                //movingPoint = startPoint;
-                foreach(var rel in poligonRelations)
+
+                foreach (var rel in relations)
                 {
-                    foreach(var line in GetLinesFromLine(activeLine))
-                    {
-                        if (rel.isThisLineInRelation(line))
+                    if(!rel.alreadyMoved())
+                        foreach (var line in Polygon.GetLinesFrom(polygons))
                         {
-                            rel.Fix(line, line.Pt2 == movingPoint ? line.Pt1 : line.Pt2, poligonRelations);
-                            break;
+                            if (rel.isThisLineInRelation(line))
+                            {
+                                float bestScore = float.MaxValue;
+                                float startScore = rel.Score() + getScorePartial(rel);
+                                int dx = 0, dy = 0;
+
+                                foreach(int i in new List<int>() { 0, 1, -1})
+                                    foreach (int j in new List<int>() { 0, 1, -1 })
+                                    {
+                                        var tmp = rel.scoreWithChange(i, j, line, stationaryPoint) + getScorePartial(rel);
+                                        if (tmp < bestScore && tmp < startScore)
+                                        {
+                                            dx = i;
+                                            dy = j;
+                                            bestScore = tmp;
+                                        }
+                                    }
+
+                                if (bestScore < float.MaxValue && bestScore < startScore)
+                                {
+                                    rel.moveByChange(dx, dy, line, stationaryPoint);
+                                    rel.setMove(true);
+                                }
+                            }
+
                         }
-                        
-                    }
                 }
-                foreach (var rel in poligonRelations) score += rel.Score();
-                
+
+                resetMoved();
+
+
+                foreach (var rel in relations) score += rel.Score();
+
                 // We do this until we get better score that threashold or until we are making it worst
             }
-
-
         }
 
     }
