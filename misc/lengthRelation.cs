@@ -1,4 +1,5 @@
 ﻿using polygonEditor.components;
+using polygonEditor.misc;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -11,7 +12,7 @@ using System.Xml.Schema;
 
 namespace polygonEditor.misc
 {
-    internal class lengthRelation : polygonEditor.misc.IRelation, IDisposable
+    internal class lengthRelation : IRelation, IDisposable
     {
         public polygonEditor.components.Line l { get; private set; }
         public float length { get; private set; }

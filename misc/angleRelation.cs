@@ -1,4 +1,5 @@
 ﻿using polygonEditor.components;
+using polygonEditor.misc;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -11,7 +12,7 @@ using System.Xml.Schema;
 
 namespace polygonEditor.misc
 {
-    internal class angleRelation : polygonEditor.misc.IRelation, IDisposable
+    internal class angleRelation : IRelation, IDisposable
     {
         private int modifier = 10000;
         public components.Line l1 { get; private set; }
@@ -72,11 +73,15 @@ namespace polygonEditor.misc
                 {
                     return scoreWithDelta(dx, dy, 0, 0, 0, 0, 0, 0);
                 }
-                else
+                else if (stationaryPoint is null)
                 {
                     return Math.Min(
-                        scoreWithDelta(dx, dy, 0, 0, 0, 0, 0, 0), 
+                        scoreWithDelta(dx, dy, 0, 0, 0, 0, 0, 0),
                         scoreWithDelta(0, 0, dx, dy, 0, 0, 0, 0));
+                }
+                else
+                {
+                    return float.MaxValue;
                 }
             }
             else if (l2 == activeLine)
@@ -89,11 +94,15 @@ namespace polygonEditor.misc
                 {
                     return scoreWithDelta(0, 0, 0, 0, dx, dy, 0, 0);
                 }
-                else
+                else if(stationaryPoint is null)
                 {
                     return Math.Min(
                         scoreWithDelta(0, 0, 0, 0, dx, dy, 0, 0),
                         scoreWithDelta(0, 0, 0, 0, 0, 0, dx, dy));
+                }
+                else
+                {
+                    return float.MaxValue;
                 }
             }
             else
@@ -114,7 +123,7 @@ namespace polygonEditor.misc
                 {
                     l1.Pt1.movePointByDelta(dx, dy);
                 }
-                else
+                else if (stationaryPoint is null)
                 {
                     if(scoreWithDelta(dx, dy, 0, 0, 0, 0, 0, 0) < scoreWithDelta(0, 0, dx, dy, 0, 0, 0, 0))
                     {
@@ -136,7 +145,7 @@ namespace polygonEditor.misc
                 {
                     l2.Pt1.movePointByDelta(dx, dy);
                 }
-                else
+                else if(stationaryPoint is null)
                 {
                     if(scoreWithDelta(0, 0, 0, 0, dx, dy, 0, 0) < scoreWithDelta(0, 0, 0, 0, 0, 0, dx, dy))
                     {
