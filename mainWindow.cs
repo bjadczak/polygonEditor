@@ -257,8 +257,8 @@ namespace polygonEditor
                             {
                                 if (relations[i].isThisPointInRelation(closest))
                                 {
+                                    relations[i].deleteLabel();
                                     relations.Remove(relations[i]);
-                                    i--;
                                 }
                             }
                             return;
@@ -270,8 +270,8 @@ namespace polygonEditor
                             {
                                 if (relations[i].isThisPointInRelation(closest))
                                 {
+                                    relations[i].deleteLabel();
                                     relations.Remove(relations[i]);
-                                    i--;
                                 }
                             }
                             return;
