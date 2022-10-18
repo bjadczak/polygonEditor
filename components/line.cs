@@ -35,7 +35,7 @@ namespace polygonEditor.components
         defaultDrawing d = new defaultDrawing(new Pen(Color.Black, width));
 
         // Create drawing mechanisms for being selected
-        Bresenham bS = new Bresenham((Brush)Brushes.Blue);
+        Bresenham bS = new Bresenham((Brush)Brushes.Blue, true);
         defaultDrawing dS = new defaultDrawing(new Pen(Color.Blue, width*2));
 
         public List<string> labels = new List<string>();
@@ -210,8 +210,11 @@ namespace polygonEditor.components
         internal class Bresenham : lineDrawing, IDisposable
         {
             private Brush brush;
-            public Bresenham(Brush brush)
+            // If we draw bold line
+            private bool bold;
+            public Bresenham(Brush brush, bool bold = false)
             {
+                this.bold = bold;
                 this.brush = brush;
             }
             public void draw(Bitmap drawArea, Point point1, Point point2)
@@ -263,7 +266,10 @@ namespace polygonEditor.components
 
                 for(int i = 0; i<=Math.Abs(dx); i++)
                 {
-                    drawOnePoint(drawArea, point);
+                    if (bold)
+                        drawOnePointThickPositive(drawArea, point);
+                    else 
+                        drawOnePoint(drawArea, point);
                     // We move either to "right" or "up-right"
                     if(diff > 0)
                     {
@@ -297,7 +303,10 @@ namespace polygonEditor.components
 
                 for (int i = 0; i <= Math.Abs(dy); i++)
                 {
-                    drawOnePoint(drawArea, point);
+                    if (bold)
+                        drawOnePointThickNegative(drawArea, point);
+                    else
+                        drawOnePoint(drawArea, point);
                     // We move either to "right" or "up-right"
                     if (diff > 0)
                     {
@@ -318,6 +327,20 @@ namespace polygonEditor.components
                 using (Graphics g = Graphics.FromImage(drawArea))
                 {
                     g.FillRectangle(brush, point.x, point.y, 1, 1);
+                }
+            }
+            private void drawOnePointThickPositive(Bitmap drawArea, Point point)
+            {
+                using (Graphics g = Graphics.FromImage(drawArea))
+                {
+                    g.FillRectangle(brush, point.x, point.y, 1, 2);
+                }
+            }
+            private void drawOnePointThickNegative(Bitmap drawArea, Point point)
+            {
+                using (Graphics g = Graphics.FromImage(drawArea))
+                {
+                    g.FillRectangle(brush, point.x, point.y, 2, 1);
                 }
             }
 

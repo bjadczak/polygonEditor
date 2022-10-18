@@ -483,6 +483,7 @@ namespace polygonEditor
             holdingPoint = null;
             holdingLine = null;
             holdingPoligon = null;
+            Polygon.FixPoligons(polygons, relations, null);
         }
 
         private void resetContextMenu()
