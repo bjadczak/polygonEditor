@@ -20,46 +20,17 @@ namespace polygonEditor
 {
     public partial class mainWindow : Form
     {
-        // Actual object we are going draw on, like a "canvas"
-        private Bitmap drawArea;
 
-        // List of poligons we have on the screen
-        List<components.Polygon> polygons = new List<components.Polygon>();
-
-        // Listo of references to points of polygons that is being build
-        List<components.Point> buildingPoints = new List<components.Point>();
-
-        components.Polygon tmpPoli = null;
-
-        // Moste recent point where we saw mouse
-        components.Point movingPoint = null;
-
-        // Point of poligon we are moving
-        components.Point holdingPoint = null;
-        // Line of poligon we are moving
-        components.Line holdingLine = null;
-        // Polygon we are moving
-        components.Polygon holdingPoligon = null;
-
-        // Active mode of input
-        misc.enums.mode activeMode = misc.enums.mode.addingPoint;
-
-        // List of all active relations
-        List<misc.IRelation> relations = new List<misc.IRelation>();
-
-        // Active line
-        components.Line activeLine = null;
+        misc.context ctx;
 
 
         public mainWindow()
         {
             InitializeComponent();
 
-            // We create and attache our "canvas" to pictureBox
-            drawArea = new Bitmap(mainPictureBox.Size.Width, mainPictureBox.Size.Height);
-            mainPictureBox.Image = drawArea;
+            ctx = new misc.context(mainPictureBox.Size.Width, mainPictureBox.Size.Height);
 
-            createDefoultPolygons();
+            mainPictureBox.Image = ctx.drawArea;
 
             drawOnPictureBox();
         }
@@ -67,71 +38,20 @@ namespace polygonEditor
         // When we resize our window we need to adapt our bitmap size
         private void mainWindow_Resize(object sender, EventArgs e)
         {
-            if (!(drawArea is null)) drawArea.Dispose();
+            if (!(ctx.drawArea is null)) ctx.drawArea.Dispose();
             if (mainPictureBox.Size.Width == 0 && mainPictureBox.Size.Height == 0) return;
-            drawArea = new Bitmap(mainPictureBox.Size.Width, mainPictureBox.Size.Height);
-            mainPictureBox.Image = drawArea;
+            ctx.drawArea = new Bitmap(mainPictureBox.Size.Width, mainPictureBox.Size.Height);
+            mainPictureBox.Image = ctx.drawArea;
             drawOnPictureBox();
         }
         
-        private void createDefoultPolygons()
-        {
-            List<Line> polygonOneLines = new List<Line>();
-            List<Line> polygonTwoLines = new List<Line>();
-            
-            components.Point p1pt1 = new components.Point(50, 50);
-            components.Point p1pt2 = new components.Point(50, 200);
-            components.Point p1pt3 = new components.Point(200, 200);
-
-            components.Point p2pt1 = new components.Point(400, 400);
-            components.Point p2pt2 = new components.Point(400, 250);
-            components.Point p2pt3 = new components.Point(250, 250);
-
-            Line parralelLine1 = new Line(p1pt3, p1pt1);
-            Line parralelLine2 = new Line(p2pt3, p2pt1);
-
-            Line fixedLengthLine = new Line(p1pt1, p1pt2);
-
-            polygonOneLines.Add(fixedLengthLine);
-            polygonOneLines.Add(new Line(p1pt2, p1pt3));
-            polygonOneLines.Add(parralelLine1);
-
-            polygonTwoLines.Add(new Line(p2pt1, p2pt2));
-            polygonTwoLines.Add(new Line(p2pt2, p2pt3));
-            polygonTwoLines.Add(parralelLine2);
-
-            var polygonOne = new Polygon(polygonOneLines);
-            var polygonTwo = new Polygon(polygonTwoLines);
-
-            polygons.Add(polygonOne);
-            polygons.Add(polygonTwo);
-
-            relations.Add(new angleRelation(parralelLine1, parralelLine2));
-            relations.Add(new lengthRelation(fixedLengthLine, 150));
-        }
+        
 
         // Method that calls to draw specific vertixces and lines
         private void drawOnPictureBox()
         {
-            // Fill bitmap with white background
-            using (Graphics g = Graphics.FromImage(drawArea))
-            {
-                g.Clear(Color.White);
-            }
 
-            // Drawing poligon that is being build
-            if (!(tmpPoli is null))
-            {
-                tmpPoli.Draw(drawArea);
-                tmpPoli.DrawIncompleteLine(drawArea, movingPoint);
-            }
-
-            // Draw all poligons taht we have stored
-            foreach (components.Polygon p in polygons)
-            {
-                p.Draw(drawArea);
-            }
-
+            ctx.drawAllObjects();
 
             mainPictureBox.Refresh();
         }
@@ -140,35 +60,35 @@ namespace polygonEditor
         {
             components.Point actPoint = new components.Point(X, Y);
             // If we are building poligon, check if new point is overlapping with already added
-            if (buildingPoints.Count() > 0 && !(polygonEditor.components.Polygon.checkOverallping(actPoint, buildingPoints, tmpPoli.startingPoint) is null)) return;
+            if (ctx.buildingPoints.Count() > 0 && !(polygonEditor.components.Polygon.checkOverallping(actPoint, ctx.buildingPoints, ctx.tmpPoly.startingPoint) is null)) return;
 
             // Check if we are creating new poligon from scrach
-            if (tmpPoli is null)
+            if (ctx.tmpPoly is null)
             {
                 // If we are not build a poligon, we shopuld check if we have clocked on an edge
                 if (addPointInTheMiddle(X, Y)) return;
                 // Check if we are overlapping with existing poligon point
-                if (!(polygonEditor.components.Polygon.checkOverallping(actPoint, polygonEditor.components.Polygon.GetPointsFrom(polygons)) is null)) return;
-                tmpPoli = new components.Polygon(actPoint);
-                buildingPoints.Add(actPoint);
+                if (!(polygonEditor.components.Polygon.checkOverallping(actPoint, polygonEditor.components.Polygon.GetPointsFrom(ctx.polygons)) is null)) return;
+                ctx.tmpPoly = new components.Polygon(actPoint);
+                ctx.buildingPoints.Add(actPoint);
             }
             else
             {
-                movingPoint = null;
-                if (tmpPoli.addNewPoint(actPoint, polygonEditor.components.Polygon.GetPointsFrom(polygons)))
+                ctx.movingPoint = null;
+                if (ctx.tmpPoly.addNewPoint(actPoint, polygonEditor.components.Polygon.GetPointsFrom(ctx.polygons)))
                 {
-                    buildingPoints.Add(actPoint);
+                    ctx.buildingPoints.Add(actPoint);
 
-                    if (tmpPoli.isPoligonComplet())
+                    if (ctx.tmpPoly.isPoligonComplet())
                     {
-                        polygons.Add(tmpPoli);
-                        tmpPoli = null;
-                        buildingPoints.Clear();
+                        ctx.polygons.Add(ctx.tmpPoly);
+                        ctx.tmpPoly = null;
+                        ctx.buildingPoints.Clear();
                         drawOnPictureBox();
                     }
                     else
                     {
-                        tmpPoli.Draw(drawArea);
+                        ctx.tmpPoly.Draw(ctx.drawArea);
                         mainPictureBox.Refresh();
                     }
                 }
@@ -178,38 +98,32 @@ namespace polygonEditor
         {
             components.Point actPoint = new components.Point(X, Y);
             // Moving a point we check which point is selected
-            polygonEditor.components.Point closest = polygonEditor.components.Point.findClosest(polygonEditor.components.Polygon.GetPointsFrom(polygons), actPoint);
+            polygonEditor.components.Point closest = polygonEditor.components.Point.findClosest(polygonEditor.components.Polygon.GetPointsFrom(ctx.polygons), actPoint);
 
             if (!(closest is null))
             {
-                holdingPoint = closest;
+                ctx.holdingPoint = closest;
 
-                movingPoint = actPoint;
+                ctx.movingPoint = actPoint;
 
                 drawOnPictureBox();
             }
         }
         private void resetOnRMB()
         {
-            holdingPoint = null;
-            holdingLine = null;
-            holdingPoligon = null;
-            if (!(tmpPoli is null)) buildingPoints.Clear();
-            tmpPoli = null;
-            if (!(activeLine is null)) activeLine.selected = false;
-            activeLine = null;
+            ctx.resetAllActivity();
 
             drawOnPictureBox();
         }
         private void moveAnEdge(int X, int Y)
         {
             components.Point actPoint = new components.Point(X, Y);
-            polygonEditor.components.Line closest = polygonEditor.components.Line.findFirstOnLine(polygonEditor.components.Polygon.GetLinesFrom(polygons), actPoint);
+            polygonEditor.components.Line closest = polygonEditor.components.Line.findFirstOnLine(polygonEditor.components.Polygon.GetLinesFrom(ctx.polygons), actPoint);
             if (!(closest is null))
             {
-                holdingLine = closest;
+                ctx.holdingLine = closest;
 
-                movingPoint = actPoint;
+                ctx.movingPoint = actPoint;
 
                 drawOnPictureBox();
             }
@@ -219,21 +133,21 @@ namespace polygonEditor
         private void movePoligon(int X, int Y)
         {
             components.Point actPoint = new components.Point(X, Y);
-            polygonEditor.components.Line closest = polygonEditor.components.Line.findFirstOnLine(polygonEditor.components.Polygon.GetLinesFrom(polygons), actPoint);
+            polygonEditor.components.Line closest = polygonEditor.components.Line.findFirstOnLine(polygonEditor.components.Polygon.GetLinesFrom(ctx.polygons), actPoint);
             if (!(closest is null))
             {
-                foreach (var p in polygons)
+                foreach (var p in ctx.polygons)
                 {
                     if (p.containsLine(closest))
                     {
-                        holdingPoligon = p;
+                        ctx.holdingPolygon = p;
                         break;
                     }
                 }
 
-                if (holdingPoligon is null) throw new InvalidOperationException("No poligons set");
+                if (ctx.holdingPolygon is null) throw new InvalidOperationException("No poligons set");
 
-                movingPoint = actPoint;
+                ctx.movingPoint = actPoint;
 
                 drawOnPictureBox();
             }
@@ -242,23 +156,23 @@ namespace polygonEditor
         private void deletePoint(int X, int Y)
         {
             components.Point actPoint = new components.Point(X, Y);
-            polygonEditor.components.Point closest = polygonEditor.components.Point.findClosest(polygonEditor.components.Polygon.GetPointsFrom(polygons), actPoint);
+            polygonEditor.components.Point closest = polygonEditor.components.Point.findClosest(polygonEditor.components.Polygon.GetPointsFrom(ctx.polygons), actPoint);
 
             if (!(closest is null))
             {
-                foreach(var p in polygons)
+                foreach(var p in ctx.polygons)
                 {
                     if (p.containsPoint(closest))
                     {
                         if(p.Count <= 2)
                         {
-                            polygons.Remove(p);
-                            for (int i = 0; i < relations.Count; i++)
+                            ctx.polygons.Remove(p);
+                            for (int i = 0; i < ctx.relations.Count; i++)
                             {
-                                if (relations[i].isThisPointInRelation(closest))
+                                if (ctx.relations[i].isThisPointInRelation(closest))
                                 {
-                                    relations[i].deleteLabel();
-                                    relations.Remove(relations[i]);
+                                    ctx.relations[i].deleteLabel();
+                                    ctx.relations.Remove(ctx.relations[i]);
                                 }
                             }
                             return;
@@ -266,12 +180,12 @@ namespace polygonEditor
                         else
                         {
                             p.deletePoint(closest);
-                            for (int i = 0; i < relations.Count; i++)
+                            for (int i = 0; i < ctx.relations.Count; i++)
                             {
-                                if (relations[i].isThisPointInRelation(closest))
+                                if (ctx.relations[i].isThisPointInRelation(closest))
                                 {
-                                    relations[i].deleteLabel();
-                                    relations.Remove(relations[i]);
+                                    ctx.relations[i].deleteLabel();
+                                    ctx.relations.Remove(ctx.relations[i]);
                                 }
                             }
                             return;
@@ -283,10 +197,10 @@ namespace polygonEditor
         private bool addPointInTheMiddle(int X, int Y)
         {
             components.Point actPoint = new components.Point(X, Y);
-            polygonEditor.components.Line closest = polygonEditor.components.Line.findFirstOnLine(polygonEditor.components.Polygon.GetLinesFrom(polygons), actPoint);
+            polygonEditor.components.Line closest = polygonEditor.components.Line.findFirstOnLine(polygonEditor.components.Polygon.GetLinesFrom(ctx.polygons), actPoint);
             if (!(closest is null))
             {
-                foreach (var p in polygons)
+                foreach (var p in ctx.polygons)
                 {
                     if (p.containsLine(closest))
                     {
@@ -310,11 +224,11 @@ namespace polygonEditor
         private void addRelationLength(int X, int Y)
         {
             components.Point actPoint = new components.Point(X, Y);
-            polygonEditor.components.Line closest = polygonEditor.components.Line.findFirstOnLine(polygonEditor.components.Polygon.GetLinesFrom(polygons), actPoint);
+            polygonEditor.components.Line closest = polygonEditor.components.Line.findFirstOnLine(polygonEditor.components.Polygon.GetLinesFrom(ctx.polygons), actPoint);
             if (!(closest is null))
             {
-                if (!(activeLine is null)) activeLine.selected = false;
-                activeLine = null;
+                if (!(ctx.activeLine is null)) ctx.activeLine.selected = false;
+                ctx.activeLine = null;
                 closest.selected = true;
                 drawOnPictureBox();
                 int ret = polygonEditor.misc.inputDialog.ShowDialog("Fixed length relation", "Please input desired length", closest.displayLength);
@@ -324,9 +238,9 @@ namespace polygonEditor
                     return;
                 }
                 closest.selected = false;
-                relations.Add(new polygonEditor.misc.lengthRelation(closest, ret));
+                ctx.relations.Add(new polygonEditor.misc.lengthRelation(closest, ret));
 
-                Polygon.FixPoligons(polygons, relations, null);
+                Polygon.FixPoligons(ctx.polygons, ctx.relations, null);
 
                 drawOnPictureBox();
             }
@@ -336,15 +250,15 @@ namespace polygonEditor
         private void addRelationParallel(int X, int Y)
         {
             components.Point actPoint = new components.Point(X, Y);
-            polygonEditor.components.Line closest = polygonEditor.components.Line.findFirstOnLine(polygonEditor.components.Polygon.GetLinesFrom(polygons), actPoint);
+            polygonEditor.components.Line closest = polygonEditor.components.Line.findFirstOnLine(polygonEditor.components.Polygon.GetLinesFrom(ctx.polygons), actPoint);
 
             // Check if it is a second sine selected
-            if (activeLine is null)
+            if (ctx.activeLine is null)
             {
                 if (!(closest is null))
                 {
                     closest.selected = true;
-                    activeLine = closest;
+                    ctx.activeLine = closest;
                     drawOnPictureBox();
                 }
             }
@@ -352,17 +266,17 @@ namespace polygonEditor
             {
                 if (!(closest is null))
                 {
-                    if (closest.Pt1 == activeLine.Pt1 || closest.Pt1 == activeLine.Pt2 || closest.Pt2 == activeLine.Pt1 || closest.Pt2 == activeLine.Pt2) return;
+                    if (closest.Pt1 == ctx.activeLine.Pt1 || closest.Pt1 == ctx.activeLine.Pt2 || closest.Pt2 == ctx.activeLine.Pt1 || closest.Pt2 == ctx.activeLine.Pt2) return;
                     closest.selected = true;
                     drawOnPictureBox();
 
                     // Add paralell relation
-                    relations.Add(new angleRelation(activeLine, closest));
+                    ctx.relations.Add(new angleRelation(ctx.activeLine, closest));
 
-                    Polygon.FixPoligons(polygons, relations, null);
+                    Polygon.FixPoligons(ctx.polygons, ctx.relations, null);
 
-                    activeLine.selected = closest.selected = false;
-                    activeLine = null;
+                    ctx.activeLine.selected = closest.selected = false;
+                    ctx.activeLine = null;
                     drawOnPictureBox();
                 }
             }
@@ -371,13 +285,13 @@ namespace polygonEditor
         private void deleteRelations(int X, int Y)
         {
             components.Point actPoint = new components.Point(X, Y);
-            polygonEditor.components.Line closest = polygonEditor.components.Line.findFirstOnLine(polygonEditor.components.Polygon.GetLinesFrom(polygons), actPoint);
+            polygonEditor.components.Line closest = polygonEditor.components.Line.findFirstOnLine(polygonEditor.components.Polygon.GetLinesFrom(ctx.polygons), actPoint);
             if (!(closest is null))
             { 
                 Predicate<IRelation> constainsClosest = r => r.isThisLineInRelation(closest);
-                foreach (var rel in relations.FindAll(constainsClosest)) rel.deleteLabel();
+                foreach (var rel in ctx.relations.FindAll(constainsClosest)) rel.deleteLabel();
                 
-                relations.RemoveAll(constainsClosest);
+                ctx.relations.RemoveAll(constainsClosest);
 
                 drawOnPictureBox();
             }
@@ -389,7 +303,7 @@ namespace polygonEditor
             switch (e.Button) { 
                 case MouseButtons.Left:
                     // Chceck what mode is active
-                    switch (activeMode)
+                    switch (ctx.activeMode)
                     {
                         case misc.enums.mode.addingPoint:
                             {
@@ -455,22 +369,22 @@ namespace polygonEditor
         // they click
         private void mouseMoveOverCanvas(object sender, MouseEventArgs e)
         {
-            polygonEditor.components.Point tmp = movingPoint;
-            movingPoint = new components.Point(e.X, e.Y);
+            polygonEditor.components.Point tmp = ctx.movingPoint;
+            ctx.movingPoint = new components.Point(e.X, e.Y);
 
-            if (!(holdingPoint is null))
+            if (!(ctx.holdingPoint is null))
             {
-                holdingPoint.movePoint(movingPoint);
-                Polygon.FixPoligons(polygons, relations, holdingPoint);
+                ctx.holdingPoint.movePoint(ctx.movingPoint);
+                Polygon.FixPoligons(ctx.polygons, ctx.relations, ctx.holdingPoint);
             }
-            else if (!(holdingLine is null) && !(tmp is null))
+            else if (!(ctx.holdingLine is null) && !(tmp is null))
             {
-                holdingLine.moveLine(tmp, movingPoint);
-                Polygon.FixPoligons(polygons, relations, holdingPoint);
+                ctx.holdingLine.moveLine(tmp, ctx.movingPoint);
+                Polygon.FixPoligons(ctx.polygons, ctx.relations, ctx.holdingPoint);
             }
-            else if (!(holdingPoligon is null) && !(tmp is null))
+            else if (!(ctx.holdingPolygon is null) && !(tmp is null))
             {
-                holdingPoligon.movePoligon(tmp, movingPoint);
+                ctx.holdingPolygon.movePoligon(tmp, ctx.movingPoint);
             }
 
             drawOnPictureBox();
@@ -480,10 +394,8 @@ namespace polygonEditor
 
         private void endOfClickOnPictureBox(object sender, MouseEventArgs e)
         {
-            holdingPoint = null;
-            holdingLine = null;
-            holdingPoligon = null;
-            Polygon.FixPoligons(polygons, relations, null);
+            ctx.resetAllHolds();
+            Polygon.FixPoligons(ctx.polygons, ctx.relations, null);
         }
 
         private void resetContextMenu()
@@ -502,35 +414,35 @@ namespace polygonEditor
         {
             resetContextMenu();
             addAPointMenuItem.Checked = true;
-            activeMode = misc.enums.mode.addingPoint;
+            ctx.activeMode = misc.enums.mode.addingPoint;
         }
 
         private void movaAPointMenuItem_Click(object sender, EventArgs e)
         {
             resetContextMenu();
             movaAPointMenuItem.Checked = true;
-            activeMode = misc.enums.mode.movingPoint;
+            ctx.activeMode = misc.enums.mode.movingPoint;
         }
 
         private void moveAnEdgeMenuItem_Click(object sender, EventArgs e)
         {
             resetContextMenu();
             moveAnEdgeMenuItem.Checked = true;
-            activeMode = misc.enums.mode.movingEdge;
+            ctx.activeMode = misc.enums.mode.movingEdge;
         }
 
         private void moveAPoligonMenuItem_Click(object sender, EventArgs e)
         {
             resetContextMenu();
             moveAPoligonMenuItem.Checked = true;
-            activeMode = misc.enums.mode.movingPoligon;
+            ctx.activeMode = misc.enums.mode.movingPoligon;
         }
 
         private void deleteAPointMenuItem_Click(object sender, EventArgs e)
         {
             resetContextMenu();
             deleteAPointMenuItem.Checked = true;
-            activeMode = misc.enums.mode.deletingPoint;
+            ctx.activeMode = misc.enums.mode.deletingPoint;
         }
 
         private void defaultMethodOfDrawingMenuItem_Click(object sender, EventArgs e)
@@ -554,7 +466,7 @@ namespace polygonEditor
             resetContextMenu();
             addARelationMenuItem.Checked = true;
             addFixedLengthMenuItem.Checked = true;
-            activeMode = misc.enums.mode.addingRelationLength;
+            ctx.activeMode = misc.enums.mode.addingRelationLength;
         }
 
         private void selectParallelLinesMenuItem_Click(object sender, EventArgs e)
@@ -562,14 +474,14 @@ namespace polygonEditor
             resetContextMenu();
             addARelationMenuItem.Checked = true;
             selectParallelLinesMenuItem.Checked = true;
-            activeMode = misc.enums.mode.addingRelationParallel;
+            ctx.activeMode = misc.enums.mode.addingRelationParallel;
         }
 
         private void deleteRelationsMenuItem_Click(object sender, EventArgs e)
         {
             resetContextMenu();
             deleteRelationsMenuItem.Checked = true;
-            activeMode = misc.enums.mode.deletingRelations;
+            ctx.activeMode = misc.enums.mode.deletingRelations;
         }
     }
 }
