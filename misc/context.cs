@@ -5,9 +5,12 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace polygonEditor.misc
 {
+    // This class contains fields and methods that manipulate them, nessesary
+    // to functioning of appication
     internal class context
     {
         // Actual object we are going draw on, like a "canvas"
@@ -125,6 +128,14 @@ namespace polygonEditor.misc
             holdingPolygon = null;
         }
 
+        public void handleResize(PictureBox mainPictureBox)
+        {
+            if (!(this.drawArea is null)) this.drawArea.Dispose();
+            if (mainPictureBox.Size.Width == 0 && mainPictureBox.Size.Height == 0) return;
+            this.drawArea = new Bitmap(mainPictureBox.Size.Width, mainPictureBox.Size.Height);
+            mainPictureBox.Image = this.drawArea;
+            this.drawAllObjects();
+        }
 
     }
 }
