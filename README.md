@@ -37,3 +37,25 @@ Modes are:
   - Adding parallelism relation
 User can manipulate polygons in each of this modes. Apart from that, user can also choose in contex menu which algoritm of drawing line to use.
 
+---
+## Alghorithm of relations
+When there is a move on the cavnas that nessesitates fixing of relations application calls function *FixPoligons()* that looks throu all stored relations. For each relation we check all lines that are in relations and try to "*fix*" these lines.
+
+Fixing of line is a process of picking one of end points of line and then trying to move it in 8 possible ways:
+1. Left
+2. Left-Top
+3. Top
+4. Right-Top
+5. Right
+6. Right-Bottom
+7. Bottom
+8. Left-Bottom
+
+After we have checked all options we pick one that took us the closest to desired configuration of lines.
+
+We continiue to iterate throu relations and lines until we reach "*good enough*" configuration or until we cannot fix configuration. Further more, we do not fix the same relation twice in one iteration of whole cycle of fixing relations.l
+
+## Assumptions
+* Alghorithm does not move the point that is being draged
+* If Alghorithm cannot get to desired state (either becouse it can't happen or becouse we are holding poitn that should be moved), application will try to fix the state one more time after we stop holding the point.
+

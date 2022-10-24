@@ -33,7 +33,8 @@ namespace polygonEditor.misc
 
         public bool isThisLineInRelation(Line l)
         {
-            return l == this.l;
+            return this.l.Pt1 == l.Pt1 || this.l.Pt1 == l.Pt2 ||
+                this.l.Pt2 == l.Pt1 || this.l.Pt2 == l.Pt2;
         }
 
         public void Dispose()

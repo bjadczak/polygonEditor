@@ -35,7 +35,8 @@ namespace polygonEditor.misc
 
         public bool isThisLineInRelation(Line l)
         {
-            return l == l1 || l == l2;
+            return this.l1.Pt1 == l.Pt1 || this.l1.Pt1 == l.Pt2 || this.l1.Pt2 == l.Pt1 || this.l1.Pt2 == l.Pt2 ||
+                this.l2.Pt1 == l.Pt1 || this.l2.Pt1 == l.Pt2 || this.l2.Pt2 == l.Pt1 || this.l2.Pt2 == l.Pt2;
         }
 
         public bool isThisPointInRelation(polygonEditor.components.Point p)
