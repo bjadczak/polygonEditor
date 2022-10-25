@@ -113,6 +113,34 @@ namespace polygonEditor
 
             mainPictureBox.Refresh();
         }
+        // Adding a circle
+        private void addACircle(int X, int Y)
+        {
+            polygonEditor.components.componentsManipulator.addCircle(X, Y, ctx);
+
+            mainPictureBox.Refresh();
+        }
+        // Move a circle
+        private void moveACircle(int X, int Y)
+        {
+            polygonEditor.components.componentsManipulator.moveCircle(X, Y, ctx);
+
+            mainPictureBox.Refresh();
+        }
+        // Resize a circle
+        private void resizeACircle(int X, int Y)
+        {
+            polygonEditor.components.componentsManipulator.resizeCircle(X, Y, ctx);
+
+            mainPictureBox.Refresh();
+        }
+        // Remove a circle
+        private void removeACircle(int X, int Y)
+        {
+            polygonEditor.components.componentsManipulator.removeCircle(X, Y, ctx);
+
+            mainPictureBox.Refresh();
+        }
 
         private void clickOnPictureBox(object sender, MouseEventArgs e)
         {
@@ -160,6 +188,26 @@ namespace polygonEditor
                         case misc.enums.mode.deletingRelations:
                             {
                                 deleteRelations(e.X, e.Y);
+                            }
+                            break;
+                        case misc.enums.mode.addACircle:
+                            {
+                                addACircle(e.X, e.Y);
+                            }
+                            break;
+                        case misc.enums.mode.moveACircle:
+                            {
+                                moveACircle(e.X, e.Y);
+                            }
+                            break;
+                        case misc.enums.mode.resizeACircle:
+                            {
+                                resizeACircle(e.X, e.Y);
+                            }
+                            break;
+                        case misc.enums.mode.removeACircle:
+                            {
+                                removeACircle(e.X, e.Y);
                             }
                             break;
                         default:
@@ -283,6 +331,34 @@ namespace polygonEditor
             resetContextMenu();
             deleteRelationsMenuItem.Checked = true;
             ctx.activeMode = misc.enums.mode.deletingRelations;
+        }
+
+        private void addACircleMenuItem_Click(object sender, EventArgs e)
+        {
+            resetContextMenu();
+            addACircleMenuItem.Checked = true;
+            ctx.activeMode = misc.enums.mode.addACircle;
+        }
+
+        private void moveACircleMenuItem_Click(object sender, EventArgs e)
+        {
+            resetContextMenu();
+            moveACircleMenuItem.Checked = true;
+            ctx.activeMode = misc.enums.mode.moveACircle;
+        }
+
+        private void resizeACircleMenuItem_Click(object sender, EventArgs e)
+        {
+            resetContextMenu();
+            resizeACircleMenuItem.Checked = true;
+            ctx.activeMode = misc.enums.mode.resizeACircle;
+        }
+
+        private void removeACircleMenuItem_Click(object sender, EventArgs e)
+        {
+            resetContextMenu();
+            removeACircleMenuItem.Checked = true;
+            ctx.activeMode = misc.enums.mode.removeACircle;
         }
     }
 }

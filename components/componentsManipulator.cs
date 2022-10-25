@@ -268,6 +268,86 @@ namespace polygonEditor.components
             else if (!(ctx.holdingPolygon is null) && !(tmp is null))
             {
                 ctx.holdingPolygon.movePoligon(tmp, ctx.movingPoint);
+            } 
+            else if(!(tmp is null) && !(ctx.tmpCircle is null))
+            {
+                ctx.tmpCircle.MoveRadius(tmp);
+            }
+            if (!(tmp is null) && !(ctx.holdingCircle is null))
+            {
+                ctx.holdingCircle.moveCircle(ctx.movingPoint.x - tmp.x, ctx.movingPoint.y - tmp.y);
+            }
+        }
+
+        public static void addCircle(int X, int Y, misc.context ctx)
+        {
+            components.Point actPoint = new components.Point(X, Y);
+
+            if (ctx.tmpCircle is null)
+            {
+                components.Circle c = new Circle(actPoint);
+                ctx.tmpCircle = c;
+            }
+            else
+            {
+                ctx.tmpCircle.finishMoving(actPoint);
+                ctx.circles.Add(ctx.tmpCircle);
+                ctx.tmpCircle = null;
+            }
+
+
+            ctx.drawAllObjects();
+
+        }
+
+        public static void moveCircle(int X, int Y, misc.context ctx)
+        {
+            components.Point actPoint = new components.Point(X, Y);
+            polygonEditor.components.Circle closest = polygonEditor.components.Circle.findFirstOnLine(ctx.circles, actPoint);
+            if (!(closest is null))
+            {
+
+                ctx.holdingCircle = closest;
+
+                ctx.movingPoint = actPoint;
+
+                ctx.drawAllObjects();
+            }
+        }
+        public static void resizeCircle(int X, int Y, misc.context ctx)
+        {
+            components.Point actPoint = new components.Point(X, Y);
+            polygonEditor.components.Circle closest = polygonEditor.components.Circle.findFirstOnLine(ctx.circles, actPoint);
+            if (!(closest is null))
+            {
+
+                ctx.circles.Remove(closest);
+
+                closest.enterResizing();
+
+                ctx.tmpCircle = closest;
+
+                ctx.movingPoint = actPoint;
+
+                ctx.drawAllObjects();
+            }
+            else if(!(ctx.tmpCircle is null))
+            {
+                ctx.tmpCircle.finishMoving(actPoint);
+                ctx.circles.Add(ctx.tmpCircle);
+                ctx.tmpCircle = null;
+            }
+        }
+        public static void removeCircle(int X, int Y, misc.context ctx)
+        {
+            components.Point actPoint = new components.Point(X, Y);
+            polygonEditor.components.Circle closest = polygonEditor.components.Circle.findFirstOnLine(ctx.circles, actPoint);
+            if (!(closest is null))
+            {
+
+                ctx.circles.Remove(closest);
+
+                ctx.drawAllObjects();
             }
         }
     }

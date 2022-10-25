@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="components\circle.cs" />
     <Compile Include="components\componentsManipulator.cs" />
     <Compile Include="components\line.cs" />
     <Compile Include="components\point.cs" />

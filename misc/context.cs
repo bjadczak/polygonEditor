@@ -43,6 +43,13 @@ namespace polygonEditor.misc
         // Active line
         public components.Line activeLine = null;
 
+        // List of circles
+        public List<components.Circle> circles = new List<components.Circle>();
+
+        public components.Circle tmpCircle = null;
+
+        public components.Circle holdingCircle = null;
+
         public context(int width, int height)
         {
             // We create and attache our "canvas" to pictureBox
@@ -108,6 +115,15 @@ namespace polygonEditor.misc
             {
                 p.Draw(drawArea);
             }
+            if(!(tmpCircle is null))
+            {
+                tmpCircle.DrawIncompleatCircle(drawArea, movingPoint);
+            }
+            // Draw all circles
+            foreach(components.Circle c in circles)
+            {
+                c.Draw(drawArea);
+            }
         }
 
         public void resetAllActivity()
@@ -119,6 +135,8 @@ namespace polygonEditor.misc
             tmpPoly = null;
             if (!(activeLine is null)) activeLine.selected = false;
             activeLine = null;
+            tmpCircle = null;
+            holdingCircle = null;
         }
 
         public void resetAllHolds()
@@ -126,6 +144,7 @@ namespace polygonEditor.misc
             holdingPoint = null;
             holdingLine = null;
             holdingPolygon = null;
+            holdingCircle = null;
         }
 
         public void handleResize(PictureBox mainPictureBox)

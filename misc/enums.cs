@@ -18,6 +18,10 @@ namespace polygonEditor.misc
             addingRelationLength,
             addingRelationParallel,
             deletingRelations,
+            addACircle,
+            moveACircle,
+            resizeACircle,
+            removeACircle,
         }
     }
 }

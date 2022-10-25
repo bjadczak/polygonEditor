@@ -43,6 +43,10 @@
             this.addFixedLengthMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.selectParallelLinesMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteRelationsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addACircleMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.moveACircleMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.resizeACircleMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeACircleMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.mainPictureBox)).BeginInit();
             this.contextMenuStrip.SuspendLayout();
             this.SuspendLayout();
@@ -69,9 +73,13 @@
             this.deleteAPointMenuItem,
             this.methodOfDrawingToolStripMenuItem,
             this.addARelationMenuItem,
-            this.deleteRelationsMenuItem});
+            this.deleteRelationsMenuItem,
+            this.addACircleMenuItem,
+            this.moveACircleMenuItem,
+            this.resizeACircleMenuItem,
+            this.removeACircleMenuItem});
             this.contextMenuStrip.Name = "contextMenuStrip";
-            this.contextMenuStrip.Size = new System.Drawing.Size(181, 202);
+            this.contextMenuStrip.Size = new System.Drawing.Size(181, 290);
             // 
             // addAPointMenuItem
             // 
@@ -165,6 +173,34 @@
             this.deleteRelationsMenuItem.Text = "Delete relations";
             this.deleteRelationsMenuItem.Click += new System.EventHandler(this.deleteRelationsMenuItem_Click);
             // 
+            // addACircleMenuItem
+            // 
+            this.addACircleMenuItem.Name = "addACircleMenuItem";
+            this.addACircleMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.addACircleMenuItem.Text = "Add a circle";
+            this.addACircleMenuItem.Click += new System.EventHandler(this.addACircleMenuItem_Click);
+            // 
+            // moveACircleMenuItem
+            // 
+            this.moveACircleMenuItem.Name = "moveACircleMenuItem";
+            this.moveACircleMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.moveACircleMenuItem.Text = "Move a circle";
+            this.moveACircleMenuItem.Click += new System.EventHandler(this.moveACircleMenuItem_Click);
+            // 
+            // resizeACircleMenuItem
+            // 
+            this.resizeACircleMenuItem.Name = "resizeACircleMenuItem";
+            this.resizeACircleMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.resizeACircleMenuItem.Text = "Resize a circle";
+            this.resizeACircleMenuItem.Click += new System.EventHandler(this.resizeACircleMenuItem_Click);
+            // 
+            // removeACircleMenuItem
+            // 
+            this.removeACircleMenuItem.Name = "removeACircleMenuItem";
+            this.removeACircleMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.removeACircleMenuItem.Text = "Remove a circle";
+            this.removeACircleMenuItem.Click += new System.EventHandler(this.removeACircleMenuItem_Click);
+            // 
             // mainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -196,6 +232,10 @@
         private System.Windows.Forms.ToolStripMenuItem addFixedLengthMenuItem;
         private System.Windows.Forms.ToolStripMenuItem selectParallelLinesMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteRelationsMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addACircleMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem moveACircleMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem resizeACircleMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem removeACircleMenuItem;
     }
 }
 
